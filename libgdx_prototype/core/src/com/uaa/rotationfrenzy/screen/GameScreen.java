@@ -1,6 +1,11 @@
 package com.uaa.rotationfrenzy.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.uaa.rotationfrenzy.RotationFrenzy;
 import com.uaa.rotationfrenzy.level.Level;
 
@@ -10,9 +15,14 @@ public class GameScreen implements Screen {
     private Level level;
     private final RotationFrenzy game;
 
+    private OrthographicCamera camera;
+
     public GameScreen(final RotationFrenzy inGame){
         this.game = inGame;
         this.level = new Level();
+
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, RotationFrenzy.SCREEN_WIDTH ,RotationFrenzy.SCREEN_HEIGHT);
     }
 
     @Override
@@ -23,11 +33,30 @@ public class GameScreen implements Screen {
     }
 
     private void update(float delta){
-        level.update(delta);
+        camera.update();
+        game.batch.setProjectionMatrix(camera.combined);
+
+        if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+            this.isPaused = !this.isPaused;
+        }
+
+        if (!this.isPaused) {
+
+            this.level.update(delta);
+        }
     }
 
     private void draw(float delta){
-        level.draw(game, delta);
+        Gdx.gl.glClearColor(0.1f, 0, 0.2f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        game.batch.setProjectionMatrix(camera.combined);
+
+        if (!this.isPaused) {
+            game.batch.begin();
+            level.draw(game, delta);
+            game.batch.end();
+        }
     }
 
     @Override
@@ -50,7 +79,7 @@ public class GameScreen implements Screen {
     public void resume() {
         System.out.println("GameScreen.resume() method called");
 
-        isPaused = true;   //Start the game paused
+        isPaused = false;
     }
 
     @Override

@@ -9,10 +9,10 @@ public class Wheel  extends Rotatable{
     }
 
     public void update(float delta){
-
+        super.update(delta);
     }
 
     public void draw(float delta, SpriteBatch batch){
-
+        this.sprite.draw(batch);
     }
 }
