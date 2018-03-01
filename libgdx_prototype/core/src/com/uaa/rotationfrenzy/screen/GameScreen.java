@@ -22,11 +22,11 @@ public class GameScreen implements Screen {
     }
 
     private void update(float delta){
-
+        level.update(delta);
     }
 
     private void draw(float delta){
-
+        level.draw(game, delta);
     }
 
     @Override

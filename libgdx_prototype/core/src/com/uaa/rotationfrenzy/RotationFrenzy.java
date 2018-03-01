@@ -8,7 +8,7 @@ import com.uaa.rotationfrenzy.screen.GameScreen;
 // Starts the GameScreen which will do all the game interaction
 // Game is a nice class that allows us to call setScreen and move between screens easily.
 public class RotationFrenzy extends Game {
-	SpriteBatch batch;
+	public SpriteBatch batch;
 	
 	@Override
 	public void create () {
