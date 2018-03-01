@@ -24,8 +24,8 @@ public class Level {
         wheel = new Wheel();
         squirrel = new Squirrel();
         den = new Den();
-
-
+        eagles = new Array<Eagle>();
+        acorns = new Array<Acorn>();
     }
 
     // This is where we MOVE or ROTATE all objects

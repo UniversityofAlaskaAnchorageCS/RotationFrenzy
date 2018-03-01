@@ -12,6 +12,7 @@ public class GameScreen implements Screen {
 
     public GameScreen(final RotationFrenzy inGame){
         this.game = inGame;
+        this.level = new Level();
     }
 
     @Override
