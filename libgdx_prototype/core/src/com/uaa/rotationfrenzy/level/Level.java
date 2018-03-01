@@ -1,5 +1,6 @@
 package com.uaa.rotationfrenzy.level;
 
+import com.uaa.rotationfrenzy.entity.Acorn;
 import com.uaa.rotationfrenzy.entity.Den;
 import com.uaa.rotationfrenzy.entity.Eagle;
 import com.uaa.rotationfrenzy.entity.Squirrel;
@@ -11,6 +12,7 @@ public class Level {
     Squirrel squirrel;
     Den den;
     Eagle eagle;
+    Acorn acorn;
 
     public Level(){
 
