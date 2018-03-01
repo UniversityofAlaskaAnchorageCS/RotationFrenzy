@@ -1,7 +1,7 @@
 package com.uaa.rotationfrenzy.entity;
 
 
-import com.uaa.rotationfrenzy.RotationFrenzy;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Eagle extends Rotatable{
 
@@ -13,7 +13,7 @@ public class Eagle extends Rotatable{
 
     }
 
-    public void draw(float delta, RotationFrenzy game){
+    public void draw(float delta, SpriteBatch batch){
 
     }
 }

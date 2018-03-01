@@ -1,6 +1,6 @@
 package com.uaa.rotationfrenzy.entity;
 
-import com.uaa.rotationfrenzy.RotationFrenzy;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Den extends Rotatable {
     public Den(){
@@ -11,7 +11,7 @@ public class Den extends Rotatable {
 
     }
 
-    public void draw(float delta, RotationFrenzy game){
+    public void draw(float delta, SpriteBatch batch){
 
     }
 }

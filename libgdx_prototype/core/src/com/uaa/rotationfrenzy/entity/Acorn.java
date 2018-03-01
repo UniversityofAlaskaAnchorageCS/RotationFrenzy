@@ -1,10 +1,6 @@
 package com.uaa.rotationfrenzy.entity;
 
-import com.uaa.rotationfrenzy.RotationFrenzy;
-
-/**
- * Created by thisisme1 on 2/28/2018.
- */
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Acorn extends Rotatable {
     public Acorn(){
@@ -15,7 +11,7 @@ public class Acorn extends Rotatable {
 
     }
 
-    public void draw(float delta, RotationFrenzy game){
+    public void draw(float delta, SpriteBatch batch){
 
     }
 }

@@ -30,9 +30,9 @@ public class Level {
 
     // This is where we MOVE or ROTATE all objects
     public void update(float delta){
-        wheel.update();
-        squirrel.update();
-        den.update();
+        wheel.update(delta);
+        squirrel.update(delta);
+        den.update(delta);
 
         for (Eagle eagle : eagles){
             eagle.update(delta);
@@ -44,15 +44,15 @@ public class Level {
 
     // This is where we DRAW all the objects
     public void draw(final RotationFrenzy game, float delta){
-        wheel.update(delta);
-        squirrel.update(delta);
-        den.update(delta);
+        wheel.draw(delta, game.batch);
+        squirrel.draw(delta, game.batch);
+        den.draw(delta, game.batch);
 
         for (Eagle eagle : eagles){
-            eagle.update(delta, game.batch);
+            eagle.draw(delta, game.batch);
         }
         for (Acorn acorn : acorns){
-            acorn.update(delta, game.batch);
+            acorn.draw(delta, game.batch);
         }
     }
 
