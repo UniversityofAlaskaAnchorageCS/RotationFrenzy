@@ -4,10 +4,6 @@ import com.badlogic.gdx.Screen;
 import com.uaa.rotationfrenzy.RotationFrenzy;
 import com.uaa.rotationfrenzy.level.Level;
 
-/**
- * Created by thisisme1 on 2/28/2018.
- */
-
 // This is the main game screen that runs, taking user input
 public class GameScreen implements Screen {
     private boolean isPaused = false;
