@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.Json;
 import com.uaa.rotationfrenzy.RotationFrenzy;
 import com.uaa.rotationfrenzy.level.Level;
 
@@ -19,7 +20,10 @@ public class GameScreen implements Screen {
 
     public GameScreen(final RotationFrenzy inGame){
         this.game = inGame;
-        this.level = new Level();
+        //this.level = new Level();
+
+        Json json = new Json();
+        this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level1.json"));
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, RotationFrenzy.SCREEN_WIDTH ,RotationFrenzy.SCREEN_HEIGHT);

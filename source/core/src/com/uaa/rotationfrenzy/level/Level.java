@@ -3,6 +3,7 @@ package com.uaa.rotationfrenzy.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.uaa.rotationfrenzy.RotationFrenzy;
 import com.uaa.rotationfrenzy.Spritz;
@@ -12,6 +13,8 @@ import com.uaa.rotationfrenzy.entity.Eagle;
 import com.uaa.rotationfrenzy.entity.Squirrel;
 import com.uaa.rotationfrenzy.entity.Wheel;
 import com.uaa.rotationfrenzy.graph.BasicGraph;
+
+import java.util.ArrayList;
 
 public class Level {
 
@@ -23,7 +26,15 @@ public class Level {
     private Array<Acorn> acorns;
     BasicGraph graph;
 
-    String levelQuestion; // Like "Move the squirel N degrees"
+    //private String levelQuestion;        // ConvertedString from the
+
+    // Values loaded from the level#.json file
+    private int levelID;
+    private ArrayList levelQuestion;        // Like "Move the squirel N degrees" multi-line.  Need to convert to string
+    private String type;                // "Enter" a value, or "Touch" the screen.
+    private int attempts;               // how many times they can be wrong on this level before they fail?
+    private int timeLimit;              // How many seconds until they fail
+    private String angleUnitType;
 
     public Level(){
 
@@ -42,11 +53,11 @@ public class Level {
 
         // Testing basic information
         this.wheel.setSprite(new Spritz(t));
-        this.wheel.setAxisRotationDelta((float)0.1);
+        this.wheel.setAxisRotationDelta(0.1f);
 
 
-        levelQuestion = "This arctic ground squirrel needs to get into its den! Help it “ride the wheel” <some number of degrees> to the den entrance.\n" +
-                "(If you miss, an eagle swoops in and eats the squirrel.)";
+        //levelQuestion = "This arctic ground squirrel needs to get into its den! Help it “ride the wheel” <some number of degrees> to the den entrance.\n" +
+        //        "(If you miss, an eagle swoops in and eats the squirrel.)";
 
         t = new Texture(Gdx.files.internal("sprites/squirrel.png"));
 
@@ -83,7 +94,15 @@ public class Level {
     // This is where we DRAW all the objects
     public void draw(final RotationFrenzy game, float delta){
 
-        game.font.draw(game.batch, levelQuestion, 20, RotationFrenzy.SCREEN_HEIGHT - 20);
+        // Currently just does a straight arraylist to string
+        // this adds a [ and ] and each line is seperated with a comma
+        // need to either change the JSON, or write own toString method
+        game.font.draw(game.batch, levelQuestion.toString(),
+                20,
+                RotationFrenzy.SCREEN_HEIGHT - 20,
+                RotationFrenzy.SCREEN_WIDTH - 20,
+                Align.left,
+                true);
 
         wheel.draw(delta, game.batch);
         squirrel.draw(delta, game.batch);
