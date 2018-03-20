@@ -27,7 +27,7 @@ AlwaysLocked to wheel rotation
 Eagle: 0-*
 StartPosition
 visibleAtStart
-MovementType: Attack vs Rotate
+MovementType: Attack vs Rotate 
 RotationSpeed: 0 when attack, otherwise set to positive for CCW (CounterClockWise) or negative for CW
 
 Acorn: 0-*
