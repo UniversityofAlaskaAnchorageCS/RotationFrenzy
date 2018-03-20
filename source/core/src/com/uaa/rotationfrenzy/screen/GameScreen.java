@@ -24,6 +24,7 @@ public class GameScreen implements Screen {
 
         Json json = new Json();
         this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level1.json"));
+        this.level.buildLevel();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, RotationFrenzy.SCREEN_WIDTH ,RotationFrenzy.SCREEN_HEIGHT);
