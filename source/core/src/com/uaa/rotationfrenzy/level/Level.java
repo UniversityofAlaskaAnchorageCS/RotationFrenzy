@@ -36,6 +36,21 @@ public class Level {
     private int timeLimit;              // How many seconds until they fail
     private String angleUnitType;
 
+    // Den specific values loaded from level#.json
+    private boolean denExists;          // If the den does not exist, the level doesn't have one
+    private boolean denStartVisible;    // If the den should be shown at all times, or only "Revealed"
+    private float denStartRotation;     // Location to put the den (Den does not move)
+
+    // Eagles
+    private Vector2[] eagleStartPositions;
+    private float[] eagleStartRotations;
+    private boolean eagleStartVisible;
+    private String eagleMovementType;
+    private float eagleRotationSpeed;
+
+    // Acorns
+    private float[] acornStartRotations;
+
     public Level(){
 
         wheel = new Wheel();

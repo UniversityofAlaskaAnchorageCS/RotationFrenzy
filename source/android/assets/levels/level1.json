@@ -7,5 +7,21 @@
   "type": "Enter",
   "attempts": 0,
   "timeLimit": 60,
-  "angleUnitType": "Degrees"
+  "angleUnitType": "Degrees",
+  "denExists": true,
+  "denStartVisible": false,
+  "denStartRotation": 0,
+  "eagleStartPositions": [
+    {"x": 100, "y": 100},
+    {"x": 200, "y": 200}
+  ],
+  "eagleStartRotations": [
+    60, 30
+  ],
+  "eagleStartVisible": true,
+  "eagleMovementType": "Attack",
+  "eagleRotationSpeed": 0,
+  "acornStartRotations": [
+    60, 30
+  ]
 }
