@@ -5,23 +5,21 @@
     "Help it “ride the wheel” <some number of degrees> to the den entrance…",
     "(If you miss, an eagle swoops in and eats the squirrel.)"],
   "type": "Enter",
-  "attempts": 0,
+  "attempts": 3,
   "timeLimit": 60,
   "angleUnitType": "Degrees",
   "denExists": true,
   "denStartVisible": false,
-  "denStartRotation": 0,
+  "denStartRotationMin": 30,
+  "denStartRotationMax": 330,
   "eagleStartPositions": [
-    {"x": 100, "y": 100},
-    {"x": 200, "y": 200}
+    {"x": -50, "y": 50}
   ],
-  "eagleStartRotations": [
-    60, 30
-  ],
+  "eagleStartRotations": [ ],
   "eagleStartVisible": true,
   "eagleMovementType": "Attack",
-  "eagleRotationSpeed": 0,
-  "acornStartRotations": [
-    60, 30
-  ]
+  "eagleRotationSpeedType": "None",
+  "eagleRotationSpeedMin": 0,
+  "eagleRotationSpeedMax": 0,
+  "acornStartRotations": [ ]
 }
