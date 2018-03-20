@@ -31,25 +31,27 @@ public class Level {
     // Values loaded from the level#.json file
     private int levelID;
     private ArrayList levelQuestion;        // Like "Move the squirel N degrees" multi-line.  Need to convert to string
-    private String type;                // "Enter" a value, or "Touch" the screen.
-    private int attempts;               // how many times they can be wrong on this level before they fail?
-    private int timeLimit;              // How many seconds until they fail
-    private String angleUnitType;
+    private String type;                    // "Enter" a value, or "Touch" the screen.
+    private int attempts;                   // how many times they can be wrong on this level before they fail?
+    private int timeLimit;                  // How many seconds until they fail
+    private String angleUnitType;           // Degrees, Radians, Random (Pick one)
 
     // Den specific values loaded from level#.json
-    private boolean denExists;          // If the den does not exist, the level doesn't have one
-    private boolean denStartVisible;    // If the den should be shown at all times, or only "Revealed"
-    private float denStartRotation;     // Location to put the den (Den does not move)
+    private boolean denExists;              // If the den does not exist, the level doesn't have one
+    private boolean denStartVisible;        // If the den should be shown at all times, or only "Revealed"
+    private float denStartRotationMin;      // Den gets placed between min ans max rotation in Degrees
+    private float denStartRotationMax;      // Location to put the den (Den does not move) in Degrees
 
-    // Eagles
-    private Vector2[] eagleStartPositions;
-    private float[] eagleStartRotations;
-    private boolean eagleStartVisible;
-    private String eagleMovementType;
-    private float eagleRotationSpeed;
+    // Eagles 
+    private Vector2[] eagleStartPositions;  // Starting positions of the eagles, can not use this and eagleStartRotations, negative means from bottom or from top    private float[] eagleStartRotations;    // Starting rotation (in Degrees) of the eagles, can not use this and eagleStartPositions
+    private boolean eagleStartVisible;      // If the eagles should be visibvle at the start of the level
+    private String eagleMovementType;       // Attack, Rotate
+    private String eagleRotationSpeedType;  // PickBetween, IncreaseOverTime, None
+    private float eagleRotationSpeedMin;    // Lowest rotation speed for the eagles in Degrees
+    private float eagleRotationSpeedMax;    // Highest rotation speed for the eagles in Degrees
 
     // Acorns
-    private float[] acornStartRotations;
+    private float[] acornStartRotations;    // Rotation angle to place the acorns in Degrees.
 
     public Level(){
 
