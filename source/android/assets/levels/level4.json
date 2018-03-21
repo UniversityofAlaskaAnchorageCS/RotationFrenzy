@@ -7,19 +7,19 @@
   "type": "Enter",
   "attempts": 3,
   "timeLimit": 60,
-  "angleUnitType": "Degrees",
+  "angleUnitType": "Random",
   "denExists": true,
   "denStartVisible": false,
   "denStartRotationMin": 30,
   "denStartRotationMax": 330,
-  "eagleStartPositions": [
-    {"x": -50, "y": 50}
+  "eagleStartPositions": [ ],
+  "eagleStartRotations": [
+    60, 30
   ],
-  "eagleStartRotations": [ ],
   "eagleStartVisible": true,
-  "eagleMovementType": "Attack",
-  "eagleRotationSpeedType": "None",
-  "eagleRotationSpeedMin": 0,
-  "eagleRotationSpeedMax": 0,
+  "eagleMovementType": "Rotate",
+  "eagleRotationSpeedType": "PickBetween",
+  "eagleRotationSpeedMin": 1,
+  "eagleRotationSpeedMax": 10,
   "acornStartRotations": [ ]
 }

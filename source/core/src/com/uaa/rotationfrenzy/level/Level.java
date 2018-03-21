@@ -31,35 +31,51 @@ public class Level {
     // Values loaded from the level#.json file
     private int levelID;
     private ArrayList levelQuestion;        // Like "Move the squirel N degrees" multi-line.  Need to convert to string
-    private String type;                // "Enter" a value, or "Touch" the screen.
-    private int attempts;               // how many times they can be wrong on this level before they fail?
-    private int timeLimit;              // How many seconds until they fail
-    private String angleUnitType;
+    private String type;                    // "Enter" a value, or "Touch" the screen.
+    private int attempts;                   // how many times they can be wrong on this level before they fail?
+    private int timeLimit;                  // How many seconds until they fail
+    private String angleUnitType;           // Degrees, Radians, Random (Pick one)
+
+    // Den specific values loaded from level#.json
+    private boolean denExists;              // If the den does not exist, the level doesn't have one
+    private boolean denStartVisible;        // If the den should be shown at all times, or only "Revealed"
+    private float denStartRotationMin;      // Den gets placed between min ans max rotation in Degrees
+    private float denStartRotationMax;      // Location to put the den (Den does not move) in Degrees
+
+    // Eagles
+    private Vector2[] eagleStartPositions;  // Starting positions of the eagles, can not use this and eagleStartRotations, negative means from bottom or from top
+    private float[] eagleStartRotations;    // Starting rotation (in Degrees) of the eagles, can not use this and eagleStartPositions
+    private boolean eagleStartVisible;      // If the eagles should be visibvle at the start of the level
+    private String eagleMovementType;       // Attack, Rotate
+    private String eagleRotationSpeedType;  // PickBetween, IncreaseOverTime, None
+    private float eagleRotationSpeedMin;    // Lowest rotation speed for the eagles in Degrees
+    private float eagleRotationSpeedMax;    // Highest rotation speed for the eagles in Degrees
+
+    // Acorns
+    private float[] acornStartRotations;    // Rotation angle to place the acorns in Degrees.
 
     public Level(){
-
         wheel = new Wheel();
         den = new Den();
         eagles = new Array<Eagle>();
         acorns = new Array<Acorn>();
 
-        buildLevel();
+        // Had to make buildLevel public and call it after creating the class
+        // As the JSON desierializer seems to create a class before setting the values,
+        // so if we try to do anything with the values it will fail with
+        // com.badlogic.gdx.utils.SerializationException: Class cannot be created (missing no-arg constructor)
     }
 
-    private void buildLevel(){
+    public void buildLevel(){
         // TEMPORARY PLACE to load images
         // Should be done in an asset manager in GameScreen, and accessed throuhg Game.assets.blah
-        Texture t = new Texture(Gdx.files.internal("sprites/wheel.png"));
+        Texture wheelTexture = new Texture(Gdx.files.internal("sprites/wheel.png"));
 
         // Testing basic information
-        this.wheel.setSprite(new Spritz(t));
+        this.wheel.setSprite(new Spritz(wheelTexture));
         this.wheel.setAxisRotationDelta(0.1f);
 
-
-        //levelQuestion = "This arctic ground squirrel needs to get into its den! Help it “ride the wheel” <some number of degrees> to the den entrance.\n" +
-        //        "(If you miss, an eagle swoops in and eats the squirrel.)";
-
-        t = new Texture(Gdx.files.internal("sprites/squirrel.png"));
+        Texture squirrelTexture = new Texture(Gdx.files.internal("sprites/squirrel.png"));
 
         SquirrelProperties sp = new SquirrelProperties();
         int moveInFromEdgeBy = -20;
@@ -70,10 +86,34 @@ public class Level {
         sip.setOrbitPoint(this.wheel.getPosition());
         this.squirrel.setSquirrelInstanceProperties(sip);
 
-        this.squirrel.setSprite(new Spritz(t));
+        this.squirrel.setSprite(new Spritz(squirrelTexture));
 
         this.squirrel.getSprite().setSize(new Vector2(50, 50));
 
+        generateEagles();
+        generateAcorns();
+        generateDen();
+
+    }
+
+    private void generateEagles(){
+
+        for (Vector2 vec: eagleStartPositions){
+            Eagle e = new Eagle();
+            eagles.add(e);
+        }
+
+        for (float rotation: eagleStartRotations){
+            Eagle e = new Eagle();
+            eagles.add(e);
+        }
+    }
+
+    private void generateAcorns(){
+
+    }
+
+    private void generateDen(){
 
     }
 

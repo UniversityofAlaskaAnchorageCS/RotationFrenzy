@@ -1,0 +1,34 @@
+{
+    levelID: 1,
+    levelText: 
+        This arctic ground squirrel needs to get into its den.  
+        Help it “ride the wheel” <some number of degrees> to the den entrance…
+        (If you miss, an eagle swoops in and eats the squirrel.)
+
+    type: Enter
+    attempts: 0, = infinite
+    timeLimit: 60
+    angleUnitType: Degrees
+}
+
+LevelID
+Type: Enter angle or Screen Drag
+TimeLimit: 0 = infinite, value = seconds before eagle moves in
+AngleUnitType: [D]egrees, [R]adians
+
+Den:
+# May not be a den at all in the level
+denVisibleAtStart
+denStartRotation
+
+Squirrel:
+AlwaysLocked to wheel rotation
+
+Eagle: 0-*
+StartPosition
+visibleAtStart
+MovementType: Attack vs Rotate 
+RotationSpeed: 0 when attack, otherwise set to positive for CCW (CounterClockWise) or negative for CW
+
+Acorn: 0-*
+RotationStartingPosition
