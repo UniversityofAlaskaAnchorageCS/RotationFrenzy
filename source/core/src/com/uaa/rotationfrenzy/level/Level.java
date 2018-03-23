@@ -83,6 +83,7 @@ public class Level {
         // Testing basic information
         this.wheel.setSprite(new Spritz(wheelTexture));
         this.wheel.setAxisRotationDelta(0.1f);
+        this.wheel.setOrbitPoint(new Vector2(this.wheel.getSprite().getWidth() / 2, this.wheel.getSprite().getHeight() / 2));
 
         int moveInFromEdgeBy = -20;
 
