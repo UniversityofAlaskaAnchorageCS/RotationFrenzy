@@ -14,7 +14,7 @@
   "denStartRotationMax": 330,
   "eagleStartPositions": [ ],
   "eagleStartRotations": [
-    30, -30
+    80, -30
   ],
   "eagleStartVisible": true,
   "eagleMovementType": "Rotate",
