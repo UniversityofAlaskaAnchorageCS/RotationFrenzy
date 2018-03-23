@@ -54,11 +54,24 @@ public class Level {
     // Acorns
     private float[] acornStartRotations;    // Rotation angle to place the acorns in Degrees.
 
+    // Textures are already loaded, just access them
+    Texture wheelTexture;
+    Texture squirrelTexture;
+    Texture acornTexture;
+    Texture denTexture;
+    Texture eagleTexture;
+
     public Level(){
         wheel = new Wheel();
         den = new Den();
         eagles = new Array<Eagle>();
         acorns = new Array<Acorn>();
+
+        wheelTexture = RotationFrenzy.assetManager.get("textures/wheel.png");
+        squirrelTexture = RotationFrenzy.assetManager.get("textures/squirrel.png");
+        acornTexture = RotationFrenzy.assetManager.get("textures/acorn.png");
+        denTexture = RotationFrenzy.assetManager.get("textures/den.jpg");
+        eagleTexture = RotationFrenzy.assetManager.get("textures/eagle.jpg");
 
         // Had to make buildLevel public and call it after creating the class
         // As the JSON desierializer seems to create a class before setting the values,
@@ -67,15 +80,10 @@ public class Level {
     }
 
     public void buildLevel(){
-        // TEMPORARY PLACE to load images
-        // Should be done in an asset manager in GameScreen, and accessed throuhg Game.assets.blah
-        Texture wheelTexture = RotationFrenzy.assetManager.get("textures/wheel.png");
-
         // Testing basic information
         this.wheel.setSprite(new Spritz(wheelTexture));
         this.wheel.setAxisRotationDelta(0.1f);
 
-        Texture squirrelTexture = RotationFrenzy.assetManager.get("textures/squirrel.png");
 
         SquirrelProperties sp = new SquirrelProperties();
         int moveInFromEdgeBy = -20;
