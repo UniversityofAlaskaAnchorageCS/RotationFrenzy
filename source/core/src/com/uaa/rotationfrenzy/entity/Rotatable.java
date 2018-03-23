@@ -16,7 +16,7 @@ public class Rotatable {
 
     //Used in Squirrel
     protected Vector2 orbitDistance;      					//The distance from the orbitPoint or Parent Squirrel (X/Y can be different to create elliptical orbits)
-    protected float orbitVelocity = 1.0f;        				//How fast to move around a center point: default 1.0f
+    protected float orbitVelocity = 0.0f;        				//How fast to move around a center point: default 1.0f
     protected boolean lockAxisAndOrbitRotation;		        //Squirrel always faces object it is orbiting (Like our moon)
 
     //Used in Entity
