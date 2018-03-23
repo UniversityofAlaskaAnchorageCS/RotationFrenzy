@@ -1,0 +1,11 @@
+{
+  "soundNames":[  ],
+  "musicNames":[  ],
+  "textureNames":[
+    "textures/acorn.png",
+    "textures/den.jpg",
+    "textures/eagle.jpg",
+    "textures/squirrel.png",
+    "textures/wheel.png"
+  ]
+}

@@ -69,13 +69,13 @@ public class Level {
     public void buildLevel(){
         // TEMPORARY PLACE to load images
         // Should be done in an asset manager in GameScreen, and accessed throuhg Game.assets.blah
-        Texture wheelTexture = new Texture(Gdx.files.internal("sprites/wheel.png"));
+        Texture wheelTexture = RotationFrenzy.assetManager.get("textures/wheel.png");
 
         // Testing basic information
         this.wheel.setSprite(new Spritz(wheelTexture));
         this.wheel.setAxisRotationDelta(0.1f);
 
-        Texture squirrelTexture = new Texture(Gdx.files.internal("sprites/squirrel.png"));
+        Texture squirrelTexture = RotationFrenzy.assetManager.get("textures/squirrel.png");
 
         SquirrelProperties sp = new SquirrelProperties();
         int moveInFromEdgeBy = -20;
@@ -85,9 +85,7 @@ public class Level {
         SquirrelInstanceProperties sip = new SquirrelInstanceProperties();
         sip.setOrbitPoint(this.wheel.getPosition());
         this.squirrel.setSquirrelInstanceProperties(sip);
-
         this.squirrel.setSprite(new Spritz(squirrelTexture));
-
         this.squirrel.getSprite().setSize(new Vector2(50, 50));
 
         generateEagles();
