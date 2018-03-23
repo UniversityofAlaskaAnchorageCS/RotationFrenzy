@@ -84,15 +84,11 @@ public class Level {
         this.wheel.setSprite(new Spritz(wheelTexture));
         this.wheel.setAxisRotationDelta(0.1f);
 
-
-        SquirrelProperties sp = new SquirrelProperties();
         int moveInFromEdgeBy = -20;
-        sp.setOrbitDistance(new Vector2(moveInFromEdgeBy + this.wheel.getSprite().getWidth() / 2, moveInFromEdgeBy + this.wheel.getSprite().getHeight() / 2));
-        this.squirrel = new Squirrel(sp);
 
-        SquirrelInstanceProperties sip = new SquirrelInstanceProperties();
-        sip.setOrbitPoint(this.wheel.getPosition());
-        this.squirrel.setSquirrelInstanceProperties(sip);
+        this.squirrel = new Squirrel(0.0f);
+        this.squirrel.setOrbitDistance(new Vector2(moveInFromEdgeBy + this.wheel.getSprite().getWidth() / 2, moveInFromEdgeBy + this.wheel.getSprite().getHeight() / 2));
+        this.squirrel.setOrbitPoint(this.wheel.getPosition());
         this.squirrel.setSprite(new Spritz(squirrelTexture));
         this.squirrel.getSprite().setSize(new Vector2(50, 50));
 
