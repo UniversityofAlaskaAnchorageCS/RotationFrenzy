@@ -2,6 +2,7 @@ package com.uaa.rotationfrenzy.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -14,7 +15,10 @@ import com.uaa.rotationfrenzy.entity.Squirrel;
 import com.uaa.rotationfrenzy.entity.Wheel;
 import com.uaa.rotationfrenzy.graph.BasicGraph;
 
+
 import java.util.ArrayList;
+
+import static com.badlogic.gdx.math.MathUtils.random;
 
 public class Level {
 
@@ -54,11 +58,24 @@ public class Level {
     // Acorns
     private float[] acornStartRotations;    // Rotation angle to place the acorns in Degrees.
 
+    // Textures are already loaded, just access them
+    Texture wheelTexture;
+    Texture squirrelTexture;
+    Texture acornTexture;
+    Texture denTexture;
+    Texture eagleTexture;
+
     public Level(){
         wheel = new Wheel();
         den = new Den();
         eagles = new Array<Eagle>();
         acorns = new Array<Acorn>();
+
+        wheelTexture = RotationFrenzy.assetManager.get("textures/wheel.png");
+        squirrelTexture = RotationFrenzy.assetManager.get("textures/squirrel.png");
+        acornTexture = RotationFrenzy.assetManager.get("textures/acorn.png");
+        denTexture = RotationFrenzy.assetManager.get("textures/den.jpg");
+        eagleTexture = RotationFrenzy.assetManager.get("textures/eagle.jpg");
 
         // Had to make buildLevel public and call it after creating the class
         // As the JSON desierializer seems to create a class before setting the values,
@@ -67,28 +84,22 @@ public class Level {
     }
 
     public void buildLevel(){
-        // TEMPORARY PLACE to load images
-        // Should be done in an asset manager in GameScreen, and accessed throuhg Game.assets.blah
-        Texture wheelTexture = new Texture(Gdx.files.internal("sprites/wheel.png"));
-
         // Testing basic information
         this.wheel.setSprite(new Spritz(wheelTexture));
         this.wheel.setAxisRotationDelta(0.1f);
+        this.wheel.setOrbitPoint(new Vector2(this.wheel.getSprite().getWidth() / 2, this.wheel.getSprite().getHeight() / 2));
 
-        Texture squirrelTexture = new Texture(Gdx.files.internal("sprites/squirrel.png"));
-
-        SquirrelProperties sp = new SquirrelProperties();
         int moveInFromEdgeBy = -20;
-        sp.setOrbitDistance(new Vector2(moveInFromEdgeBy + this.wheel.getSprite().getWidth() / 2, moveInFromEdgeBy + this.wheel.getSprite().getHeight() / 2));
-        this.squirrel = new Squirrel(sp);
 
-        SquirrelInstanceProperties sip = new SquirrelInstanceProperties();
-        sip.setOrbitPoint(this.wheel.getPosition());
-        this.squirrel.setSquirrelInstanceProperties(sip);
+        this.squirrel = new Squirrel(0.0f);
+        Spritz s = new Spritz(squirrelTexture, new Vector2(50, 50), 0); // Have to send in the size at this point or the spritz will not rotate about itself correctly
+        this.squirrel.setSprite(s);
+        this.squirrel.setOrbitPoint(this.wheel.getPosition());
+        this.squirrel.setOrbitDistance(new Vector2(moveInFromEdgeBy + this.wheel.getSprite().getWidth() / 2, moveInFromEdgeBy + this.wheel.getSprite().getHeight() / 2));
+        this.squirrel.setOrbitVelocity(this.wheel.getAxisRotationDelta());
 
-        this.squirrel.setSprite(new Spritz(squirrelTexture));
-
-        this.squirrel.getSprite().setSize(new Vector2(50, 50));
+        // Change this to control how fast the object "rotates" about it's own center
+        this.squirrel.setAxisRotationDelta(0);
 
         generateEagles();
         generateAcorns();
@@ -99,12 +110,41 @@ public class Level {
     private void generateEagles(){
 
         for (Vector2 vec: eagleStartPositions){
-            Eagle e = new Eagle();
+            Eagle e = new Eagle(0.0f);
+            e.setSprite(new Spritz(eagleTexture, new Vector2(50,50), 0.0f));
+            vec = adjustedScreenPosition(vec);
+            e.setOrbitPoint(vec);
             eagles.add(e);
         }
 
+        float speed = 0.0f;
+        System.out.println(eagleMovementType);
+        System.out.println(eagleRotationSpeedType);
+        System.out.println(eagleRotationSpeedMin);
+        System.out.println(eagleRotationSpeedMax);
+
+        if (eagleMovementType.equalsIgnoreCase("rotate")){
+            if (eagleRotationSpeedType.equalsIgnoreCase("pickbetween")){
+                speed = eagleRotationSpeedMin + random.nextFloat() * (eagleRotationSpeedMax - eagleRotationSpeedMin);
+            }else if (eagleRotationSpeedType.equalsIgnoreCase("increaseovertime")){
+                speed = eagleRotationSpeedMin;
+            }else{
+                speed = 0.0f;
+            }
+        }
+
         for (float rotation: eagleStartRotations){
-            Eagle e = new Eagle();
+            Eagle e = new Eagle(0.0f);
+            e.setSprite(new Spritz(eagleTexture, new Vector2(50,50), 0.0f));
+            e.setOrbitPoint(this.wheel.getPosition()); // All levels rotate around the wheel
+            e.setOrbitDistance(
+                    new Vector2(
+                            this.wheel.getSprite().getWidth() / 2 - e.getSprite().getWidth()/2,
+                            this.wheel.getSprite().getHeight() / 2 - e.getSprite().getHeight()/2));
+            e.changeOrbitRotationAngle(rotation * MathUtils.degreesToRadians);
+            e.setOrbitVelocity(speed);
+            System.out.println(speed);
+
             eagles.add(e);
         }
     }
@@ -115,6 +155,18 @@ public class Level {
 
     private void generateDen(){
 
+    }
+
+    private Vector2 adjustedScreenPosition(Vector2 vector){
+        if (vector.x < 0){
+            vector.x = RotationFrenzy.SCREEN_WIDTH + vector.x;
+        }
+
+        if (vector.y < 0){
+            vector.y = RotationFrenzy.SCREEN_HEIGHT + vector.y;
+        }
+
+        return vector;
     }
 
     // This is where we MOVE or ROTATE all objects

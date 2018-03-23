@@ -14,12 +14,12 @@
   "denStartRotationMax": 330,
   "eagleStartPositions": [ ],
   "eagleStartRotations": [
-    60, 30
+    30, -30
   ],
   "eagleStartVisible": true,
   "eagleMovementType": "Rotate",
   "eagleRotationSpeedType": "PickBetween",
-  "eagleRotationSpeedMin": 1,
-  "eagleRotationSpeedMax": 10,
+  "eagleRotationSpeedMin": 0.1,
+  "eagleRotationSpeedMax": 1.5,
   "acornStartRotations": [ ]
 }

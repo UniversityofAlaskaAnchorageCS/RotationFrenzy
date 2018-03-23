@@ -23,7 +23,7 @@ public class GameScreen implements Screen {
         //this.level = new Level();
 
         Json json = new Json();
-        this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level1.json"));
+        this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level4.json"));
         this.level.buildLevel();
 
         camera = new OrthographicCamera();
