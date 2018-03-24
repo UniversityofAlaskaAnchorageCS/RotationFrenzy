@@ -71,6 +71,13 @@ public class Level {
         eagles = new Array<Eagle>();
         acorns = new Array<Acorn>();
 
+        // Inititialze all array objects to prevent java.lang.NullPointerExceptions
+        // This allows us to remove these variables from the level file if they do not apply.
+        eagleStartPositions = new Vector2[0];
+        eagleStartRotations = new float[0];
+        acornStartRotations = new float[0];
+        eagleMovementType = "";
+
         wheelTexture = RotationFrenzy.assetManager.get("textures/wheel.png");
         squirrelTexture = RotationFrenzy.assetManager.get("textures/squirrel.png");
         acornTexture = RotationFrenzy.assetManager.get("textures/acorn.png");
@@ -150,7 +157,18 @@ public class Level {
     }
 
     private void generateAcorns(){
-
+        // Create the eagles if this level file has eagles that rotate
+        for (float rotation: acornStartRotations){
+            Acorn a = new Acorn(0.0f);
+            a.setSprite(new Spritz(acornTexture, new Vector2(50,50), 0.0f));
+            a.setOrbitPoint(this.wheel.getPosition()); // All levels rotate around the wheel
+            a.setOrbitDistance(
+                    new Vector2(
+                            this.wheel.getSprite().getWidth() / 2 - a.getSprite().getWidth()/2,
+                            this.wheel.getSprite().getHeight() / 2 - a.getSprite().getHeight()/2));
+            a.changeOrbitRotationAngle(rotation * MathUtils.degreesToRadians);
+            acorns.add(a);
+        }
     }
 
     private void generateDen(){
