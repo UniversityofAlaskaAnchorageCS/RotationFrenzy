@@ -1,0 +1,12 @@
+{
+  "levelID": 1,
+  "levelQuestion": [
+    "A sequence of movements, picking up nuts by riding the wheel around.",
+    "As the student moves the wheel, graphs of “theta vs. time” and “omega vs. time” are drawn.",
+    "No eagles… this is an exploratory level. (Or maybe one eagle to dictate CW or CCW?)"],
+  "type": "Touch",
+  "attempts": 3,
+  "timeLimit": 60,
+  "angleUnitType": "Random",
+  "acornStartRotations": [190, 250]
+}
