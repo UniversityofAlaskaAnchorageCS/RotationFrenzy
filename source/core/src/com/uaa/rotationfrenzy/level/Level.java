@@ -114,6 +114,7 @@ public class Level {
             e.setSprite(new Spritz(eagleTexture, new Vector2(50,50), 0.0f));
             vec = adjustedScreenPosition(vec);
             e.setOrbitPoint(vec);
+            e.setVisible(eagleStartVisible);
             eagles.add(e);
         }
 
@@ -143,6 +144,7 @@ public class Level {
                             this.wheel.getSprite().getHeight() / 2 - e.getSprite().getHeight()/2));
             e.changeOrbitRotationAngle(rotation * MathUtils.degreesToRadians);
             e.setOrbitVelocity(speed);
+            e.setVisible(eagleStartVisible);
             System.out.println(speed);
 
             eagles.add(e);
