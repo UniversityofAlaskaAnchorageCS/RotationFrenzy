@@ -14,6 +14,6 @@ public class Squirrel  extends Rotatable{
     }
 
     public void draw(float delta, SpriteBatch batch){
-        this.sprite.draw(batch);
+        super.draw(delta, batch);
     }
 }
