@@ -107,8 +107,11 @@ public class Level {
 
     }
 
+    // This method handles the creating of the eagles for the level
+    // It uses the loaded values from the level to setup each eagle.
     private void generateEagles(){
 
+        // Create the eagles if this level file has eagles that are in a static position
         for (Vector2 vec: eagleStartPositions){
             Eagle e = new Eagle(0.0f);
             e.setSprite(new Spritz(eagleTexture, new Vector2(50,50), 0.0f));
@@ -118,12 +121,8 @@ public class Level {
             eagles.add(e);
         }
 
+        // Determine the angular momentum (how fast should the eagle rotate around)
         float speed = 0.0f;
-        System.out.println(eagleMovementType);
-        System.out.println(eagleRotationSpeedType);
-        System.out.println(eagleRotationSpeedMin);
-        System.out.println(eagleRotationSpeedMax);
-
         if (eagleMovementType.equalsIgnoreCase("rotate")){
             if (eagleRotationSpeedType.equalsIgnoreCase("pickbetween")){
                 speed = eagleRotationSpeedMin + random.nextFloat() * (eagleRotationSpeedMax - eagleRotationSpeedMin);
@@ -134,6 +133,7 @@ public class Level {
             }
         }
 
+        // Create the eagles if this level file has eagles that rotate
         for (float rotation: eagleStartRotations){
             Eagle e = new Eagle(0.0f);
             e.setSprite(new Spritz(eagleTexture, new Vector2(50,50), 0.0f));
@@ -145,8 +145,6 @@ public class Level {
             e.changeOrbitRotationAngle(rotation * MathUtils.degreesToRadians);
             e.setOrbitVelocity(speed);
             e.setVisible(eagleStartVisible);
-            System.out.println(speed);
-
             eagles.add(e);
         }
     }
