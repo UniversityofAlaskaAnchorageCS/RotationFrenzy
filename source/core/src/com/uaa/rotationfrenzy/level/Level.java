@@ -160,7 +160,10 @@ public class Level {
         // Create the eagles if this level file has eagles that rotate
         for (float rotation: acornStartRotations){
             Acorn a = new Acorn(0.0f);
-            a.setSprite(new Spritz(acornTexture, new Vector2(50,50), 0.0f));
+            a.setSprite(new Spritz(acornTexture,
+                    new Vector2(acornTexture.getWidth()/2,
+                                acornTexture.getHeight()/2),
+                                0.0f));
             a.setOrbitPoint(this.wheel.getPosition()); // All levels rotate around the wheel
             a.setOrbitDistance(
                     new Vector2(
