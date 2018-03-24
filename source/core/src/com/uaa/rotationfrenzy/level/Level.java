@@ -93,16 +93,24 @@ public class Level {
     public void buildLevel(){
         // Testing basic information
         this.wheel.setSprite(new Spritz(wheelTexture));
-        this.wheel.setAxisRotationDelta(0.1f);
+        this.wheel.setAxisRotationDelta(0.9f);
         this.wheel.setOrbitPoint(new Vector2(this.wheel.getSprite().getWidth() / 2, this.wheel.getSprite().getHeight() / 2));
 
-        int moveInFromEdgeBy = -20;
+
 
         this.squirrel = new Squirrel(0.0f);
-        Spritz s = new Spritz(squirrelTexture, new Vector2(50, 50), 0); // Have to send in the size at this point or the spritz will not rotate about itself correctly
+        Spritz s = new Spritz(squirrelTexture,
+                new Vector2(squirrelTexture.getWidth() / 3,
+                            squirrelTexture.getHeight() / 3),
+                            0); // Have to send in the size at this point or the spritz will not rotate about itself correctly
         this.squirrel.setSprite(s);
         this.squirrel.setOrbitPoint(this.wheel.getPosition());
-        this.squirrel.setOrbitDistance(new Vector2(moveInFromEdgeBy + this.wheel.getSprite().getWidth() / 2, moveInFromEdgeBy + this.wheel.getSprite().getHeight() / 2));
+        this.squirrel.setOrbitDistance(
+                new Vector2(
+                        (this.wheel.getSprite().getWidth() / 2) -this.squirrel.getSprite().getWidth() / 3 ,
+                        (this.wheel.getSprite().getHeight() / 2) -this.squirrel.getSprite().getHeight() / 3));
+
+        //this.squirrel.setOrbitDistance(new Vector2(moveInFromEdgeBy + this.wheel.getSprite().getWidth() / 2, moveInFromEdgeBy + this.wheel.getSprite().getHeight() / 2));
         this.squirrel.setOrbitVelocity(this.wheel.getAxisRotationDelta());
 
         // Change this to control how fast the object "rotates" about it's own center
