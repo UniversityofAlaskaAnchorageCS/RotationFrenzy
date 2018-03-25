@@ -18,6 +18,8 @@ import com.uaa.rotationfrenzy.graph.BasicGraph;
 
 import java.util.ArrayList;
 
+import javax.sound.midi.SysexMessage;
+
 import static com.badlogic.gdx.math.MathUtils.random;
 
 public class Level {
@@ -67,7 +69,7 @@ public class Level {
 
     public Level(){
         wheel = new Wheel();
-        den = new Den();
+        den = new Den(0.0f);
         eagles = new Array<Eagle>();
         acorns = new Array<Acorn>();
 
@@ -94,8 +96,10 @@ public class Level {
         // Testing basic information
         this.wheel.setSprite(new Spritz(wheelTexture));
         this.wheel.setAxisRotationDelta(0.9f);
-        this.wheel.setOrbitPoint(new Vector2(this.wheel.getSprite().getWidth() / 2, this.wheel.getSprite().getHeight() / 2));
+        this.wheel.setOrbitPoint(new Vector2(50 + this.wheel.getSprite().getWidth() / 2, 50 + this.wheel.getSprite().getHeight() / 2));
 
+        System.out.println(this.wheel.getOrbitPoint());
+        System.out.println(this.wheel.getSprite().getCenter());
 
 
         this.squirrel = new Squirrel(0.0f);
@@ -182,18 +186,35 @@ public class Level {
         }
     }
 
+    // This will load the settings for the den from the level variables into the den object
     private void generateDen(){
+        if (denExists){
+            // Add the sprite to the den, shrinking the image by half it's size
+            den.setSprite(new Spritz(denTexture,
+                    new Vector2(denTexture.getWidth()/2, // Shrink the den size down
+                                denTexture.getHeight()/2), // Shrink the den size down
+                    0.0f));
 
+            // Set the point the den should "orbit" around and how far from that point it should orbit at
+            den.setOrbitPoint(this.wheel.getOrbitPoint());
+            den.setOrbitDistance(
+                    new Vector2(
+                            (this.wheel.getSprite().getWidth() / 2) + den.getSprite().getWidth(),
+                            (this.wheel.getSprite().getHeight() / 2) + den.getSprite().getHeight()));
+            den.setVisible(denStartVisible);
+
+            // Set the starting rotation position for the den to a random value between MAX and MIN Degrees.
+            float rotation = denStartRotationMin + random.nextFloat() * (denStartRotationMax - denStartRotationMin);
+            den.changeOrbitRotationAngle(rotation * MathUtils.degreesToRadians);
+        }
     }
 
     private Vector2 adjustedScreenPosition(Vector2 vector){
-        if (vector.x < 0){
+        if (vector.x < 0)
             vector.x = RotationFrenzy.SCREEN_WIDTH + vector.x;
-        }
 
-        if (vector.y < 0){
+        if (vector.y < 0)
             vector.y = RotationFrenzy.SCREEN_HEIGHT + vector.y;
-        }
 
         return vector;
     }
@@ -202,14 +223,15 @@ public class Level {
     public void update(float delta){
         wheel.update(delta);
         squirrel.update(delta);
-        den.update(delta);
 
-        for (Eagle eagle : eagles){
+        if (denExists)
+            den.update(delta);
+
+        for (Eagle eagle : eagles)
             eagle.update(delta);
-        }
-        for (Acorn acorn : acorns){
+
+        for (Acorn acorn : acorns)
             acorn.update(delta);
-        }
     }
 
     // This is where we DRAW all the objects
@@ -227,14 +249,15 @@ public class Level {
 
         wheel.draw(delta, game.batch);
         squirrel.draw(delta, game.batch);
-        den.draw(delta, game.batch);
 
-        for (Eagle eagle : eagles){
+        if (denExists)
+            den.draw(delta, game.batch);
+
+        for (Eagle eagle : eagles)
             eagle.draw(delta, game.batch);
-        }
-        for (Acorn acorn : acorns){
+
+        for (Acorn acorn : acorns)
             acorn.draw(delta, game.batch);
-        }
     }
 
     public void dispose(){
