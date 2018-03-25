@@ -108,6 +108,7 @@ public class Rotatable {
 
     public void setOrbitPoint(Vector2 orbitPoint) {
         this.orbitPoint = orbitPoint;
+        this.getSprite().setCenter(this.orbitPoint);
     }
 
     public Vector2 getFacingVector() {
