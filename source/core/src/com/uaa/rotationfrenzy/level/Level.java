@@ -85,20 +85,18 @@ public class Level {
         acornTexture = RotationFrenzy.assetManager.get("textures/acorn.png");
         denTexture = RotationFrenzy.assetManager.get("textures/den.jpg");
         eagleTexture = RotationFrenzy.assetManager.get("textures/eagle.jpg");
-
-        // Had to make buildLevel public and call it after creating the class
-        // As the JSON desierializer seems to create a class before setting the values,
-        // so if we try to do anything with the values it will fail with
-        // com.badlogic.gdx.utils.SerializationException: Class cannot be created (missing no-arg constructor)
     }
 
+    // Had to make buildLevel public and call it after creating the class
+    // As the JSON desierializer seems to create a class before setting the values,
+    // so if we try to do anything with the values it will fail with
+    // com.badlogic.gdx.utils.SerializationException: Class cannot be created (missing no-arg constructor)
     public void buildLevel(){
         generateWheel();
         generateSquirrel();
         generateEagles();
         generateAcorns();
         generateDen();
-
     }
 
     private void generateWheel(){
@@ -112,7 +110,7 @@ public class Level {
                 offset.x + this.wheel.getWidth() / 2,
                 offset.y + this.wheel.getHeight() / 2));
     }
-    
+
     private void generateSquirrel(){
         this.squirrel = new Squirrel(0.0f);
         Spritz s = new Spritz(squirrelTexture,
