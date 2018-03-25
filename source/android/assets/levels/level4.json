@@ -9,7 +9,7 @@
   "timeLimit": 60,
   "angleUnitType": "Random",
   "denExists": true,
-  "denStartVisible": false,
+  "denStartVisible": true,
   "denStartRotationMin": 30,
   "denStartRotationMax": 330,
   "eagleStartPositions": [ ],
