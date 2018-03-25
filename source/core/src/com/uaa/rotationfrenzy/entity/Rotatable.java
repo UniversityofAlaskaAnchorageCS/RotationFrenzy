@@ -31,6 +31,7 @@ public class Rotatable {
     private Vector2 orbitPoint;                 //Point that the object will rotate about
     private Vector2 facingVector;               //Vector direction (on unit circle) the object is facing, used for firing projectiles
 
+    protected boolean visible = true;
 
     public Rotatable() {
         this.orbitRotationAngle = 0.0f;
@@ -153,6 +154,18 @@ public class Rotatable {
         this.sprite = sprite;
     }
 
+    public void setVisible(){
+        this.setVisible(true);
+    }
+
+    public void setVisible(boolean visible){
+        this.visible = visible;
+    }
+
+    public boolean isVisible(){
+        return this.visible;
+    }
+
     public void update(float delta) {
         //orbitRotationAngle += (delta * orbitVelocity);
         this.changeOrbitRotationAngle((delta * this.getOrbitVelocity()));
@@ -184,6 +197,7 @@ public class Rotatable {
     }
 
     public void draw(float delta, SpriteBatch batch) {
-        this.sprite.draw(batch);
+        if (this.isVisible())
+            this.sprite.draw(batch);
     }
 }
