@@ -97,11 +97,7 @@ public class Level {
         this.wheel.setSprite(new Spritz(wheelTexture));
         this.wheel.setAxisRotationDelta(0.9f);
         this.wheel.setOrbitPoint(new Vector2(50 + this.wheel.getSprite().getWidth() / 2, 50 + this.wheel.getSprite().getHeight() / 2));
-
-        System.out.println(this.wheel.getOrbitPoint());
-        System.out.println(this.wheel.getSprite().getCenter());
-
-
+        
         this.squirrel = new Squirrel(0.0f);
         Spritz s = new Spritz(squirrelTexture,
                 new Vector2(squirrelTexture.getWidth() / 3,
