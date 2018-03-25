@@ -94,10 +94,16 @@ public class Level {
 
     public void buildLevel(){
         // Testing basic information
-        this.wheel.setSprite(new Spritz(wheelTexture));
+        this.wheel.setSprite(new Spritz(wheelTexture,
+                new Vector2(wheelTexture.getWidth()*4/5,
+                            wheelTexture.getHeight()*4/5),
+                0.0f));
         this.wheel.setAxisRotationDelta(0.9f);
-        this.wheel.setOrbitPoint(new Vector2(50 + this.wheel.getWidth() / 2, 50 + this.wheel.getHeight() / 2));
-        
+        Vector2 offset = new Vector2(75, 75);
+        this.wheel.setOrbitPoint(new Vector2(
+                offset.x + this.wheel.getWidth() / 2,
+                offset.y + this.wheel.getHeight() / 2));
+
         this.squirrel = new Squirrel(0.0f);
         Spritz s = new Spritz(squirrelTexture,
                 new Vector2(squirrelTexture.getWidth() / 3,
@@ -187,16 +193,16 @@ public class Level {
         if (denExists){
             // Add the sprite to the den, shrinking the image by half it's size
             den.setSprite(new Spritz(denTexture,
-                    new Vector2(denTexture.getWidth()/2, // Shrink the den size down
-                                denTexture.getHeight()/2), // Shrink the den size down
+                    new Vector2(denTexture.getWidth()/3, // Shrink the den size down
+                                denTexture.getHeight()/3), // Shrink the den size down
                     0.0f));
 
             // Set the point the den should "orbit" around and how far from that point it should orbit at
             den.setOrbitPoint(this.wheel.getOrbitPoint());
             den.setOrbitDistance(
                     new Vector2(
-                            (this.wheel.getWidth() / 2) + den.getWidth(),
-                            (this.wheel.getHeight() / 2) + den.getHeight()));
+                            (this.wheel.getWidth() / 2) + den.getWidth()/2,
+                            (this.wheel.getHeight() / 2) + den.getHeight()/2));
             den.setVisible(denStartVisible);
 
             // Set the starting rotation position for the den to a random value between MAX and MIN Degrees.
