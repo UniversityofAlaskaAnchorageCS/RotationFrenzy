@@ -71,6 +71,13 @@ public class Level {
         eagles = new Array<Eagle>();
         acorns = new Array<Acorn>();
 
+        // Inititialze all array objects to prevent java.lang.NullPointerExceptions
+        // This allows us to remove these variables from the level file if they do not apply.
+        eagleStartPositions = new Vector2[0];
+        eagleStartRotations = new float[0];
+        acornStartRotations = new float[0];
+        eagleMovementType = "";
+
         wheelTexture = RotationFrenzy.assetManager.get("textures/wheel.png");
         squirrelTexture = RotationFrenzy.assetManager.get("textures/squirrel.png");
         acornTexture = RotationFrenzy.assetManager.get("textures/acorn.png");
@@ -86,16 +93,24 @@ public class Level {
     public void buildLevel(){
         // Testing basic information
         this.wheel.setSprite(new Spritz(wheelTexture));
-        this.wheel.setAxisRotationDelta(0.1f);
+        this.wheel.setAxisRotationDelta(0.9f);
         this.wheel.setOrbitPoint(new Vector2(this.wheel.getSprite().getWidth() / 2, this.wheel.getSprite().getHeight() / 2));
 
-        int moveInFromEdgeBy = -20;
+
 
         this.squirrel = new Squirrel(0.0f);
-        Spritz s = new Spritz(squirrelTexture, new Vector2(50, 50), 0); // Have to send in the size at this point or the spritz will not rotate about itself correctly
+        Spritz s = new Spritz(squirrelTexture,
+                new Vector2(squirrelTexture.getWidth() / 3,
+                            squirrelTexture.getHeight() / 3),
+                            0); // Have to send in the size at this point or the spritz will not rotate about itself correctly
         this.squirrel.setSprite(s);
         this.squirrel.setOrbitPoint(this.wheel.getPosition());
-        this.squirrel.setOrbitDistance(new Vector2(moveInFromEdgeBy + this.wheel.getSprite().getWidth() / 2, moveInFromEdgeBy + this.wheel.getSprite().getHeight() / 2));
+        this.squirrel.setOrbitDistance(
+                new Vector2(
+                        (this.wheel.getSprite().getWidth() / 2) -this.squirrel.getSprite().getWidth() / 3 ,
+                        (this.wheel.getSprite().getHeight() / 2) -this.squirrel.getSprite().getHeight() / 3));
+
+        //this.squirrel.setOrbitDistance(new Vector2(moveInFromEdgeBy + this.wheel.getSprite().getWidth() / 2, moveInFromEdgeBy + this.wheel.getSprite().getHeight() / 2));
         this.squirrel.setOrbitVelocity(this.wheel.getAxisRotationDelta());
 
         // Change this to control how fast the object "rotates" about it's own center
@@ -150,7 +165,21 @@ public class Level {
     }
 
     private void generateAcorns(){
-
+        // Create the eagles if this level file has eagles that rotate
+        for (float rotation: acornStartRotations){
+            Acorn a = new Acorn(0.0f);
+            a.setSprite(new Spritz(acornTexture,
+                    new Vector2(acornTexture.getWidth()/2,
+                                acornTexture.getHeight()/2),
+                                0.0f));
+            a.setOrbitPoint(this.wheel.getPosition()); // All levels rotate around the wheel
+            a.setOrbitDistance(
+                    new Vector2(
+                            this.wheel.getSprite().getWidth() / 2 - a.getSprite().getWidth()/2,
+                            this.wheel.getSprite().getHeight() / 2 - a.getSprite().getHeight()/2));
+            a.changeOrbitRotationAngle(rotation * MathUtils.degreesToRadians);
+            acorns.add(a);
+        }
     }
 
     private void generateDen(){
