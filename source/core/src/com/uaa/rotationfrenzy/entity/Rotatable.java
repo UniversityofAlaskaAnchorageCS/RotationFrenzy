@@ -168,7 +168,6 @@ public class Rotatable {
     }
 
     public void update(float delta) {
-        //orbitRotationAngle += (delta * orbitVelocity);
         this.changeOrbitRotationAngle((delta * this.getOrbitVelocity()));
 
         float xOffset = MathUtils.cos(this.getOrbitRotationAngle());
@@ -179,12 +178,10 @@ public class Rotatable {
         xOffset *= this.getOrbitDistance().x;                //Multiply the X radius to get Ellipse, should be the same for a circle, makes it tall or short
         yOffset *= this.getOrbitDistance().y;                //Multiply the Y radius to get Ellipse, should be the same for a circle, makes it wide, or skinny
         this.sprite.setCenter(this.getOrbitPoint().x + xOffset, this.getOrbitPoint().y + yOffset);
-        //sip.setSpritePosition(this.sprite.getCenter());
 
         if (this.isLockAxisAndOrbitRotation()){
             this.setRotationAboutAxis(this.getOrbitRotationAngle());
             this.setAxisRotationDelta(0);                               //Make sure someone didn't try to screw this up
-            //sip.setSpriteRotation(sip.getOrbitRotationAngle());         //Make sure the instance variable is in sync with the sprites rotation
         }
 
         //If axisRotationDelta is provided, adjust the rotation of the image about the axis by that change amount each frame
