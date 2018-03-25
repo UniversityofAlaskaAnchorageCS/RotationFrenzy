@@ -18,6 +18,8 @@ import com.uaa.rotationfrenzy.graph.BasicGraph;
 
 import java.util.ArrayList;
 
+import javax.sound.midi.SysexMessage;
+
 import static com.badlogic.gdx.math.MathUtils.random;
 
 public class Level {
@@ -67,7 +69,7 @@ public class Level {
 
     public Level(){
         wheel = new Wheel();
-        den = new Den();
+        den = new Den(0.0f);
         eagles = new Array<Eagle>();
         acorns = new Array<Acorn>();
 
@@ -83,43 +85,50 @@ public class Level {
         acornTexture = RotationFrenzy.assetManager.get("textures/acorn.png");
         denTexture = RotationFrenzy.assetManager.get("textures/den.jpg");
         eagleTexture = RotationFrenzy.assetManager.get("textures/eagle.jpg");
-
-        // Had to make buildLevel public and call it after creating the class
-        // As the JSON desierializer seems to create a class before setting the values,
-        // so if we try to do anything with the values it will fail with
-        // com.badlogic.gdx.utils.SerializationException: Class cannot be created (missing no-arg constructor)
     }
 
+    // Had to make buildLevel public and call it after creating the class
+    // As the JSON desierializer seems to create a class before setting the values,
+    // so if we try to do anything with the values it will fail with
+    // com.badlogic.gdx.utils.SerializationException: Class cannot be created (missing no-arg constructor)
     public void buildLevel(){
-        // Testing basic information
-        this.wheel.setSprite(new Spritz(wheelTexture));
+        generateWheel();
+        generateSquirrel();
+        generateEagles();
+        generateAcorns();
+        generateDen();
+    }
+
+    private void generateWheel(){
+        this.wheel.setSprite(new Spritz(wheelTexture,
+                new Vector2(wheelTexture.getWidth()*4/5,
+                        wheelTexture.getHeight()*4/5),
+                0.0f));
         this.wheel.setAxisRotationDelta(0.9f);
-        this.wheel.setOrbitPoint(new Vector2(this.wheel.getSprite().getWidth() / 2, this.wheel.getSprite().getHeight() / 2));
+        Vector2 offset = new Vector2(75, 75);
+        this.wheel.setOrbitPoint(new Vector2(
+                offset.x + this.wheel.getWidth() / 2,
+                offset.y + this.wheel.getHeight() / 2));
+    }
 
-
-
+    private void generateSquirrel(){
         this.squirrel = new Squirrel(0.0f);
         Spritz s = new Spritz(squirrelTexture,
                 new Vector2(squirrelTexture.getWidth() / 3,
-                            squirrelTexture.getHeight() / 3),
-                            0); // Have to send in the size at this point or the spritz will not rotate about itself correctly
+                        squirrelTexture.getHeight() / 3),
+                0); // Have to send in the size at this point or the spritz will not rotate about itself correctly
         this.squirrel.setSprite(s);
         this.squirrel.setOrbitPoint(this.wheel.getPosition());
         this.squirrel.setOrbitDistance(
                 new Vector2(
-                        (this.wheel.getSprite().getWidth() / 2) -this.squirrel.getSprite().getWidth() / 3 ,
-                        (this.wheel.getSprite().getHeight() / 2) -this.squirrel.getSprite().getHeight() / 3));
+                        (this.wheel.getWidth() / 2) -this.squirrel.getWidth() / 3 ,
+                        (this.wheel.getHeight() / 2) -this.squirrel.getHeight() / 3));
 
         //this.squirrel.setOrbitDistance(new Vector2(moveInFromEdgeBy + this.wheel.getSprite().getWidth() / 2, moveInFromEdgeBy + this.wheel.getSprite().getHeight() / 2));
         this.squirrel.setOrbitVelocity(this.wheel.getAxisRotationDelta());
 
         // Change this to control how fast the object "rotates" about it's own center
         this.squirrel.setAxisRotationDelta(0);
-
-        generateEagles();
-        generateAcorns();
-        generateDen();
-
     }
 
     // This method handles the creating of the eagles for the level
@@ -155,8 +164,8 @@ public class Level {
             e.setOrbitPoint(this.wheel.getPosition()); // All levels rotate around the wheel
             e.setOrbitDistance(
                     new Vector2(
-                            this.wheel.getSprite().getWidth() / 2 - e.getSprite().getWidth()/2,
-                            this.wheel.getSprite().getHeight() / 2 - e.getSprite().getHeight()/2));
+                            this.wheel.getWidth() / 2 - e.getWidth()/2,
+                            this.wheel.getHeight() / 2 - e.getHeight()/2));
             e.changeOrbitRotationAngle(rotation * MathUtils.degreesToRadians);
             e.setOrbitVelocity(speed);
             e.setVisible(eagleStartVisible);
@@ -175,25 +184,42 @@ public class Level {
             a.setOrbitPoint(this.wheel.getPosition()); // All levels rotate around the wheel
             a.setOrbitDistance(
                     new Vector2(
-                            this.wheel.getSprite().getWidth() / 2 - a.getSprite().getWidth()/2,
-                            this.wheel.getSprite().getHeight() / 2 - a.getSprite().getHeight()/2));
+                            this.wheel.getWidth() / 2 - a.getWidth()/2,
+                            this.wheel.getHeight() / 2 - a.getHeight()/2));
             a.changeOrbitRotationAngle(rotation * MathUtils.degreesToRadians);
             acorns.add(a);
         }
     }
 
+    // This will load the settings for the den from the level variables into the den object
     private void generateDen(){
+        if (denExists){
+            // Add the sprite to the den, shrinking the image by half it's size
+            den.setSprite(new Spritz(denTexture,
+                    new Vector2(denTexture.getWidth()/3, // Shrink the den size down
+                                denTexture.getHeight()/3), // Shrink the den size down
+                    0.0f));
 
+            // Set the point the den should "orbit" around and how far from that point it should orbit at
+            den.setOrbitPoint(this.wheel.getOrbitPoint());
+            den.setOrbitDistance(
+                    new Vector2(
+                            (this.wheel.getWidth() / 2) + den.getWidth()/2,
+                            (this.wheel.getHeight() / 2) + den.getHeight()/2));
+            den.setVisible(denStartVisible);
+
+            // Set the starting rotation position for the den to a random value between MAX and MIN Degrees.
+            float rotation = denStartRotationMin + random.nextFloat() * (denStartRotationMax - denStartRotationMin);
+            den.changeOrbitRotationAngle(rotation * MathUtils.degreesToRadians);
+        }
     }
 
     private Vector2 adjustedScreenPosition(Vector2 vector){
-        if (vector.x < 0){
+        if (vector.x < 0)
             vector.x = RotationFrenzy.SCREEN_WIDTH + vector.x;
-        }
 
-        if (vector.y < 0){
+        if (vector.y < 0)
             vector.y = RotationFrenzy.SCREEN_HEIGHT + vector.y;
-        }
 
         return vector;
     }
@@ -202,18 +228,32 @@ public class Level {
     public void update(float delta){
         wheel.update(delta);
         squirrel.update(delta);
-        den.update(delta);
 
-        for (Eagle eagle : eagles){
+        if (denExists)
+            den.update(delta);
+
+        for (Eagle eagle : eagles)
             eagle.update(delta);
-        }
-        for (Acorn acorn : acorns){
+
+        for (Acorn acorn : acorns)
             acorn.update(delta);
-        }
     }
 
     // This is where we DRAW all the objects
     public void draw(final RotationFrenzy game, float delta){
+        // Drawing happens "back to front" meaning whatever is drawn first will be behind everything else"
+        if (denExists)
+            den.draw(delta, game.batch);
+
+        wheel.draw(delta, game.batch);
+
+        for (Acorn acorn : acorns)
+            acorn.draw(delta, game.batch);
+
+        squirrel.draw(delta, game.batch);
+
+        for (Eagle eagle : eagles)
+            eagle.draw(delta, game.batch);
 
         // Currently just does a straight arraylist to string
         // this adds a [ and ] and each line is seperated with a comma
@@ -225,16 +265,6 @@ public class Level {
                 Align.left,
                 true);
 
-        wheel.draw(delta, game.batch);
-        squirrel.draw(delta, game.batch);
-        den.draw(delta, game.batch);
-
-        for (Eagle eagle : eagles){
-            eagle.draw(delta, game.batch);
-        }
-        for (Acorn acorn : acorns){
-            acorn.draw(delta, game.batch);
-        }
     }
 
     public void dispose(){
