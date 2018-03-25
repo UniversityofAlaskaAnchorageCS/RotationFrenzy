@@ -194,6 +194,16 @@ public class Rotatable {
         return this.sprite.getCenter();
     }
 
+    // Add higher up width and height methods to make the code easier to read and write.
+    public float getWidth(){
+        return this.getSprite().getWidth();
+    }
+
+    public float getHeight(){
+        return this.getSprite().getHeight();
+    }
+
+
     public void draw(float delta, SpriteBatch batch) {
         if (this.isVisible())
             this.sprite.draw(batch);

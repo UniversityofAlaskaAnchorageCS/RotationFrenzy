@@ -96,7 +96,7 @@ public class Level {
         // Testing basic information
         this.wheel.setSprite(new Spritz(wheelTexture));
         this.wheel.setAxisRotationDelta(0.9f);
-        this.wheel.setOrbitPoint(new Vector2(50 + this.wheel.getSprite().getWidth() / 2, 50 + this.wheel.getSprite().getHeight() / 2));
+        this.wheel.setOrbitPoint(new Vector2(50 + this.wheel.getWidth() / 2, 50 + this.wheel.getHeight() / 2));
         
         this.squirrel = new Squirrel(0.0f);
         Spritz s = new Spritz(squirrelTexture,
@@ -107,8 +107,8 @@ public class Level {
         this.squirrel.setOrbitPoint(this.wheel.getPosition());
         this.squirrel.setOrbitDistance(
                 new Vector2(
-                        (this.wheel.getSprite().getWidth() / 2) -this.squirrel.getSprite().getWidth() / 3 ,
-                        (this.wheel.getSprite().getHeight() / 2) -this.squirrel.getSprite().getHeight() / 3));
+                        (this.wheel.getWidth() / 2) -this.squirrel.getWidth() / 3 ,
+                        (this.wheel.getHeight() / 2) -this.squirrel.getHeight() / 3));
 
         //this.squirrel.setOrbitDistance(new Vector2(moveInFromEdgeBy + this.wheel.getSprite().getWidth() / 2, moveInFromEdgeBy + this.wheel.getSprite().getHeight() / 2));
         this.squirrel.setOrbitVelocity(this.wheel.getAxisRotationDelta());
@@ -155,8 +155,8 @@ public class Level {
             e.setOrbitPoint(this.wheel.getPosition()); // All levels rotate around the wheel
             e.setOrbitDistance(
                     new Vector2(
-                            this.wheel.getSprite().getWidth() / 2 - e.getSprite().getWidth()/2,
-                            this.wheel.getSprite().getHeight() / 2 - e.getSprite().getHeight()/2));
+                            this.wheel.getWidth() / 2 - e.getWidth()/2,
+                            this.wheel.getHeight() / 2 - e.getHeight()/2));
             e.changeOrbitRotationAngle(rotation * MathUtils.degreesToRadians);
             e.setOrbitVelocity(speed);
             e.setVisible(eagleStartVisible);
@@ -175,8 +175,8 @@ public class Level {
             a.setOrbitPoint(this.wheel.getPosition()); // All levels rotate around the wheel
             a.setOrbitDistance(
                     new Vector2(
-                            this.wheel.getSprite().getWidth() / 2 - a.getSprite().getWidth()/2,
-                            this.wheel.getSprite().getHeight() / 2 - a.getSprite().getHeight()/2));
+                            this.wheel.getWidth() / 2 - a.getWidth()/2,
+                            this.wheel.getHeight() / 2 - a.getHeight()/2));
             a.changeOrbitRotationAngle(rotation * MathUtils.degreesToRadians);
             acorns.add(a);
         }
@@ -195,8 +195,8 @@ public class Level {
             den.setOrbitPoint(this.wheel.getOrbitPoint());
             den.setOrbitDistance(
                     new Vector2(
-                            (this.wheel.getSprite().getWidth() / 2) + den.getSprite().getWidth(),
-                            (this.wheel.getSprite().getHeight() / 2) + den.getSprite().getHeight()));
+                            (this.wheel.getWidth() / 2) + den.getWidth(),
+                            (this.wheel.getHeight() / 2) + den.getHeight()));
             den.setVisible(denStartVisible);
 
             // Set the starting rotation position for the den to a random value between MAX and MIN Degrees.
