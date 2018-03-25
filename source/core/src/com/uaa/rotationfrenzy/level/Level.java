@@ -93,22 +93,32 @@ public class Level {
     }
 
     public void buildLevel(){
-        // Testing basic information
+        generateWheel();
+        generateSquirrel();
+        generateEagles();
+        generateAcorns();
+        generateDen();
+
+    }
+
+    private void generateWheel(){
         this.wheel.setSprite(new Spritz(wheelTexture,
                 new Vector2(wheelTexture.getWidth()*4/5,
-                            wheelTexture.getHeight()*4/5),
+                        wheelTexture.getHeight()*4/5),
                 0.0f));
         this.wheel.setAxisRotationDelta(0.9f);
         Vector2 offset = new Vector2(75, 75);
         this.wheel.setOrbitPoint(new Vector2(
                 offset.x + this.wheel.getWidth() / 2,
                 offset.y + this.wheel.getHeight() / 2));
-
+    }
+    
+    private void generateSquirrel(){
         this.squirrel = new Squirrel(0.0f);
         Spritz s = new Spritz(squirrelTexture,
                 new Vector2(squirrelTexture.getWidth() / 3,
-                            squirrelTexture.getHeight() / 3),
-                            0); // Have to send in the size at this point or the spritz will not rotate about itself correctly
+                        squirrelTexture.getHeight() / 3),
+                0); // Have to send in the size at this point or the spritz will not rotate about itself correctly
         this.squirrel.setSprite(s);
         this.squirrel.setOrbitPoint(this.wheel.getPosition());
         this.squirrel.setOrbitDistance(
@@ -121,11 +131,6 @@ public class Level {
 
         // Change this to control how fast the object "rotates" about it's own center
         this.squirrel.setAxisRotationDelta(0);
-
-        generateEagles();
-        generateAcorns();
-        generateDen();
-
     }
 
     // This method handles the creating of the eagles for the level
