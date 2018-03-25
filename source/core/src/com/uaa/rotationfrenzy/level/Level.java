@@ -241,6 +241,19 @@ public class Level {
 
     // This is where we DRAW all the objects
     public void draw(final RotationFrenzy game, float delta){
+        // Drawing happens "back to front" meaning whatever is drawn first will be behind everything else"
+        if (denExists)
+            den.draw(delta, game.batch);
+
+        wheel.draw(delta, game.batch);
+
+        for (Acorn acorn : acorns)
+            acorn.draw(delta, game.batch);
+
+        squirrel.draw(delta, game.batch);
+
+        for (Eagle eagle : eagles)
+            eagle.draw(delta, game.batch);
 
         // Currently just does a straight arraylist to string
         // this adds a [ and ] and each line is seperated with a comma
@@ -252,17 +265,6 @@ public class Level {
                 Align.left,
                 true);
 
-        wheel.draw(delta, game.batch);
-        squirrel.draw(delta, game.batch);
-
-        if (denExists)
-            den.draw(delta, game.batch);
-
-        for (Eagle eagle : eagles)
-            eagle.draw(delta, game.batch);
-
-        for (Acorn acorn : acorns)
-            acorn.draw(delta, game.batch);
     }
 
     public void dispose(){
