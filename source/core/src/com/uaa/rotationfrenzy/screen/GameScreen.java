@@ -22,6 +22,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     private final RotationFrenzy game;
 
     private OrthographicCamera camera;
+    private Vector3 touchPoint = new Vector3();
+
 
     public GameScreen(final RotationFrenzy inGame){
         this.game = inGame;
@@ -141,6 +143,14 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         System.out.println("Touch Down!");
+
+        // Store the touch-down location, so we can calculate the angle difference
+        touchPoint.x = screenX;	//only gets input from the first touch
+        touchPoint.y = screenY;	//only gets input from the first touch
+        touchPoint.z = 0;
+
+        touchPoint = camera.unproject(touchPoint);
+
         return false;
     }
 
@@ -164,7 +174,13 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         //System.out.println("Touch Dragging it out! " + touchPos);
 
-        this.level.touchDragged(screenPos, pointer);
+        this.level.touchDragged(screenPos, pointer, touchPoint);
+
+        // Update the touchPoint so we can get a DELTA
+        touchPoint.x = screenX;	//only gets input from the first touch
+        touchPoint.y = screenY;	//only gets input from the first touch
+        touchPoint.z = 0;
+        touchPoint = camera.unproject(touchPoint);
         return false;
     }
 

@@ -272,20 +272,31 @@ public class Level {
 
     }
 
-    public void touchDragged(Vector3 screenPos, int pointer) {
+    // Assumes the wheel is the center
+    private float getAngleFromScreenCoords(Vector3 screenPoint, Vector2 centerPoint){
 
+        // Get the actual CHANGE in position based on the wheel as the center of the cooridnate system
         Vector2 deltaPos = new Vector2(
-                wheel.getPosition().x - screenPos.x,
-                wheel.getPosition().y - screenPos.y);
+                centerPoint.x - screenPoint.x,
+                centerPoint.y - screenPoint.y);
 
-        // Already calculates the arc tanget of y/x for us, so we don't have to use our math skills
-        float angle = (180 + deltaPos.angle()) * MathUtils.degreesToRadians;
-        System.out.println("Angle: " + angle / MathUtils.degreesToRadians + " -- x" + screenPos.x + " -- y" + screenPos.y);
+        // Vector2.angle() Calculates the arctan of y/x for us, so we don't have to use math
+        float angle = (180 + deltaPos.angle());
 
-        //float rotation = (wheel.getPosition().y - touchPos.y / wheel.getPosition().x - touchPos.x) * MathUtils.degreesToRadians;
-        wheel.setRotationAboutAxis(angle);
-        squirrel.setOrbitRotationAngle(angle);
+        return angle;
     }
 
+    public void touchDragged(Vector3 newScreenPos, int pointer, Vector3 touchPoint) {
+        // Get the angle based on the touch position relative to the wheel
+        float touchedAngle = getAngleFromScreenCoords(touchPoint, wheel.getPosition());
+        float newAngle = getAngleFromScreenCoords(newScreenPos, wheel.getPosition());
+
+        // Find deltaAngle, change in the angle from point the user touched the screen/wheel
+        float deltaAngle = (newAngle - touchedAngle) * MathUtils.degreesToRadians;
+
+        // Rotate all objects to the appropriate location
+        wheel.setRotationAboutAxis(wheel.getRotationAboutAxis() + deltaAngle);
+        squirrel.setOrbitRotationAngle(squirrel.getOrbitRotationAngle() + deltaAngle);
+    }
 
 }
