@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.uaa.rotationfrenzy.RotationFrenzy;
@@ -104,7 +105,7 @@ public class Level {
                 new Vector2(wheelTexture.getWidth()*4/5,
                         wheelTexture.getHeight()*4/5),
                 0.0f));
-        this.wheel.setAxisRotationDelta(0.9f);
+        this.wheel.setAxisRotationDelta(0.0f);
         Vector2 offset = new Vector2(75, 75);
         this.wheel.setOrbitPoint(new Vector2(
                 offset.x + this.wheel.getWidth() / 2,
@@ -270,4 +271,21 @@ public class Level {
     public void dispose(){
 
     }
+
+    public void touchDragged(Vector3 screenPos, int pointer) {
+
+        Vector2 deltaPos = new Vector2(
+                wheel.getPosition().x - screenPos.x,
+                wheel.getPosition().y - screenPos.y);
+
+        // Already calculates the arc tanget of y/x for us, so we don't have to use our math skills
+        float angle = (180 + deltaPos.angle()) * MathUtils.degreesToRadians;
+        System.out.println("Angle: " + angle / MathUtils.degreesToRadians + " -- x" + screenPos.x + " -- y" + screenPos.y);
+
+        //float rotation = (wheel.getPosition().y - touchPos.y / wheel.getPosition().x - touchPos.x) * MathUtils.degreesToRadians;
+        wheel.setRotationAboutAxis(angle);
+        squirrel.setOrbitRotationAngle(angle);
+    }
+
+
 }

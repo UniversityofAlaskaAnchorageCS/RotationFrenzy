@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Json;
 import com.uaa.rotationfrenzy.RotationFrenzy;
 import com.uaa.rotationfrenzy.level.Level;
@@ -149,9 +150,21 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         return false;
     }
 
+
+    // This appears to be the method we want to use to get the position of the touch/mouse drag
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        System.out.println("Touch Dragging it out!");
+        // Convert screen input to camera position
+        Vector3 touchPos = new Vector3();
+        touchPos.x = screenX;	//only gets input from the first touch
+        touchPos.y = screenY;	//only gets input from the first touch
+        touchPos.z = 0;
+
+        Vector3 screenPos = camera.unproject(touchPos);
+
+        //System.out.println("Touch Dragging it out! " + touchPos);
+
+        this.level.touchDragged(screenPos, pointer);
         return false;
     }
 
@@ -160,8 +173,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         return false;
     }
 
+    // Don't see us using this, it's specific to mousewheel
     @Override
     public boolean scrolled(int amount) {
+        System.out.println("Scrolled: 0" + amount);
         return false;
     }
 
@@ -185,13 +200,13 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
     @Override
     public boolean fling(float velocityX, float velocityY, int button) {
-        System.out.println("It was a short lived relationship.");
+        System.out.println("Fling: It was a short lived relationship. vX:" + velocityX + " vY:" +  velocityY);
         return false;
     }
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        System.out.println("Pan, Peter pan.");
+        //System.out.println("Pan, Peter pan.");
         return false;
     }
 
