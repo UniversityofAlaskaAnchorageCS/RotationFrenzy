@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.uaa.rotationfrenzy.RotationFrenzy;
@@ -104,7 +105,7 @@ public class Level {
                 new Vector2(wheelTexture.getWidth()*4/5,
                         wheelTexture.getHeight()*4/5),
                 0.0f));
-        this.wheel.setAxisRotationDelta(0.9f);
+        this.wheel.setAxisRotationDelta(0.0f);
         Vector2 offset = new Vector2(75, 75);
         this.wheel.setOrbitPoint(new Vector2(
                 offset.x + this.wheel.getWidth() / 2,
@@ -270,4 +271,32 @@ public class Level {
     public void dispose(){
 
     }
+
+    // Assumes the wheel is the center
+    private float getAngleFromScreenCoords(Vector3 screenPoint, Vector2 centerPoint){
+
+        // Get the actual CHANGE in position based on the wheel as the center of the cooridnate system
+        Vector2 deltaPos = new Vector2(
+                centerPoint.x - screenPoint.x,
+                centerPoint.y - screenPoint.y);
+
+        // Vector2.angle() Calculates the arctan of y/x for us, so we don't have to use math
+        float angle = (180 + deltaPos.angle());
+
+        return angle;
+    }
+
+    public void touchDragged(Vector3 newScreenPos, int pointer, Vector3 touchPoint) {
+        // Get the angle based on the touch position relative to the wheel
+        float touchedAngle = getAngleFromScreenCoords(touchPoint, wheel.getPosition());
+        float newAngle = getAngleFromScreenCoords(newScreenPos, wheel.getPosition());
+
+        // Find deltaAngle, change in the angle from point the user touched the screen/wheel
+        float deltaAngle = (newAngle - touchedAngle) * MathUtils.degreesToRadians;
+
+        // Rotate all objects to the appropriate location
+        wheel.setRotationAboutAxis(wheel.getRotationAboutAxis() + deltaAngle);
+        squirrel.setOrbitRotationAngle(squirrel.getOrbitRotationAngle() + deltaAngle);
+    }
+
 }
