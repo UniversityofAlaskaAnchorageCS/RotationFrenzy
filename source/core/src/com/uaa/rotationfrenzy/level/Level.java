@@ -286,6 +286,20 @@ public class Level {
         return angle;
     }
 
+    public String getAngleUnitType(){
+        return this.angleUnitType;
+    }
+
+    // If the type of the level is "Enter" then this requires user textual input.
+    // Otherwise, it is a "Touch" level, and requires no textual input.
+    public boolean hasTextualInput(){
+        return type.equalsIgnoreCase("enter");
+    }
+
+    public boolean isTouchInput(){
+        return type.equalsIgnoreCase("touch");
+    }
+
     public void touchDragged(Vector3 newScreenPos, int pointer, Vector3 touchPoint) {
         // Get the angle based on the touch position relative to the wheel
         float touchedAngle = getAngleFromScreenCoords(touchPoint, wheel.getPosition());
