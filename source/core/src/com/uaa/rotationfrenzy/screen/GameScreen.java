@@ -5,15 +5,23 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Json;
 import com.uaa.rotationfrenzy.RotationFrenzy;
 import com.uaa.rotationfrenzy.level.Level;
+
 
 // This is the main game screen that runs, taking user input
 public class GameScreen implements Screen, GestureDetector.GestureListener, InputProcessor {
@@ -24,11 +32,16 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     private OrthographicCamera camera;
     private Vector3 touchPoint = new Vector3();
 
+    private Stage stage;
+    private TextField angleEntry;
+    private GlyphLayout layout;
 
     public GameScreen(final RotationFrenzy inGame){
         this.game = inGame;
         //this.level = new Level();
 
+        // TODO: Depending on how big the level gets, may need to move this into a loading loop
+        // so the player doesn't think the game froze, for not it loads fast so doesn't matter
         Json json = new Json();
         this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level4.json"));
         this.level.buildLevel();
@@ -36,7 +49,65 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         camera = new OrthographicCamera();
         camera.setToOrtho(false, RotationFrenzy.SCREEN_WIDTH ,RotationFrenzy.SCREEN_HEIGHT);
 
+
+        textInputOption2(); // Needs to be before so the stage is setup
+
         setupInput();
+
+
+        // Option 1, popup a textbox to request the degrees
+        MyTextInputListener listener = new MyTextInputListener();
+        Gdx.input.getTextInput(listener, "Enter Angle", "", "degrees");
+
+    }
+
+    // This goes with option 1 above, could be pulled out to it's own class
+    public class MyTextInputListener implements Input.TextInputListener {
+        @Override
+        public void input (String text) {
+            System.out.println("Text they entered:" + text);
+        }
+
+
+        @Override
+        public void canceled () {
+        }
+    }
+
+    private void textInputOption2(){
+        // TODO: Load style from Skin instead of creating it, so we get a box and textbox feel
+        // This is why there is no bounding box, and no blinking cursor
+        TextField.TextFieldStyle tfs = new TextField.TextFieldStyle();
+        tfs.font = this.game.font;
+        tfs.fontColor = Color.WHITE;
+
+        // TODO: Generate this only when needed via the level
+        angleEntry = new TextField("0", tfs);
+        angleEntry.setPosition(RotationFrenzy.SCREEN_WIDTH - 100,  RotationFrenzy.SCREEN_HEIGHT - 100);
+        //angleEntry.setSize(88, 14);
+
+        // TODO: Load style from Skin
+        Label.LabelStyle ls = new Label.LabelStyle();
+        ls.font = this.game.font;
+        ls.fontColor = Color.WHITE;
+
+        // Apparently this is how you get the width of text now.....
+        layout = new GlyphLayout();
+        layout.setText(this.game.font, "Degrees: ");
+
+        Label label = new Label("Degrees:", ls);
+        label.setPosition(angleEntry.getX() - layout.width, angleEntry.getY());
+        //label.setSize(88, 14);
+
+        stage =  new Stage();
+        stage.addActor(label);
+        stage.addActor(angleEntry);            // <-- Actor now on stage
+
+        // Make sure the textbox is selected by default as focus
+        stage.setKeyboardFocus(angleEntry);
+
+        //show the keyboard
+        angleEntry.getOnscreenKeyboard().show(true);
     }
 
     @Override
@@ -44,6 +115,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         // We pass the delta, which is the change in time since the last time render was called
         update(delta);
         draw(delta);
+
+        stage.act();
+        stage.draw();
     }
 
     private void update(float delta){
@@ -66,11 +140,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         game.batch.setProjectionMatrix(camera.combined);
 
-        if (!this.isPaused) {
+        //if (!this.isPaused) {
             game.batch.begin();
             level.draw(game, delta);
             game.batch.end();
-        }
+        //}
     }
 
 
@@ -82,8 +156,12 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         im.addProcessor(gd);
         im.addProcessor(this);
 
-        //Set the input processor to the multiplexer
-        Gdx.input.setInputProcessor(im);
+        //Set the input processor to the multiplexed
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+
+        inputMultiplexer.addProcessor(im);
+        inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
