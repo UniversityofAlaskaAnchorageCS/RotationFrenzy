@@ -85,7 +85,7 @@ public class Level {
         squirrelTexture = RotationFrenzy.assetManager.get("textures/squirrel.png");
         acornTexture = RotationFrenzy.assetManager.get("textures/acorn.png");
         denTexture = RotationFrenzy.assetManager.get("textures/den.jpg");
-        eagleTexture = RotationFrenzy.assetManager.get("textures/eagle.jpg");
+        eagleTexture = RotationFrenzy.assetManager.get("textures/eagle.png");
     }
 
     // Had to make buildLevel public and call it after creating the class
