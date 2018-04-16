@@ -8,11 +8,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Json;
 import com.uaa.rotationfrenzy.RotationFrenzy;
 import com.uaa.rotationfrenzy.level.Level;
+
+import java.text.ParseException;
 
 
 // This is the main game screen that runs, taking user input
@@ -25,6 +28,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     private Vector3 touchPoint = new Vector3();
 
     private boolean userPrompted = false;
+    private float angleEntered = 0.0f;
 
     public GameScreen(final RotationFrenzy inGame){
         this.game = inGame;
@@ -46,21 +50,21 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     public class MyTextInputListener implements Input.TextInputListener {
         @Override
         public void input (String text) {
-            int value = Integer.parseInt(text);
+            try {
+                angleEntered = Float.parseFloat(text);
 
-            // TODO: Is this appropriate business logic?
-            if (value == 0) {
+                // TODO: Validate data range 0-360, and 0-N radians
+                System.out.println("Text entered:" + text);
+
+            }catch(NumberFormatException e){
                 // TODO: Display message for user that the value was invalid.
                 canceled();
             }
-
-            // TODO: Validate data range 0-360, and 0-N radians
-
-            System.out.println("Text entered:" + text);
         }
 
         @Override
         public void canceled () {
+            userPrompted = false;
         }
     }
 
@@ -69,7 +73,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         // Option 1, popup a textbox to request the degrees
         MyTextInputListener listener = new MyTextInputListener();
         Gdx.input.getTextInput(listener, "Enter Angle in " + angleType, "", angleType);
-
         this.userPrompted = true;
     }
 
