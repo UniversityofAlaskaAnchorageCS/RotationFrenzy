@@ -1,0 +1,25 @@
+{
+  "levelID": 2,
+  "levelQuestion": [
+    "This arctic ground squirrel needs to get into its den.",
+    "Help it “ride the wheel” <some number of Radians> to the den entrance…",
+    "(If you miss, an eagle swoops in and eats the squirrel.)"],
+  "type": "Enter",
+  "attempts": 3,
+  "timeLimit": 60,
+  "angleUnitType": "Radians",
+  "denExists": true,
+  "denStartVisible": true,
+  "denStartRotationMin": 30,
+  "denStartRotationMax": 330,
+  "eagleStartPositions": [
+    {"x": -50, "y": 50}
+  ],
+  "eagleStartRotations": [ ],
+  "eagleStartVisible": true,
+  "eagleMovementType": "Attack",
+  "eagleRotationSpeedType": "None",
+  "eagleRotationSpeedMin": 0,
+  "eagleRotationSpeedMax": 0,
+  "acornStartRotations": [ ]
+}

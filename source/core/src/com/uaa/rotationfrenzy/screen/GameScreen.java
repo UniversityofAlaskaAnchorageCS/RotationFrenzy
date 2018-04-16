@@ -37,7 +37,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         // TODO: Depending on how big the level gets, may need to move this into a loading loop
         // so the player doesn't think the game froze, for not it loads fast so doesn't matter
         Json json = new Json();
-        this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level1.json"));
+        this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level2.json"));
         this.level.buildLevel();
 
         camera = new OrthographicCamera();
