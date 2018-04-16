@@ -56,6 +56,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
                 // TODO: Validate data range 0-360, and 0-N radians
                 System.out.println("Text entered:" + text);
 
+                level.setUserAngle(angleEntered);
+
             }catch(NumberFormatException e){
                 // TODO: Display message for user that the value was invalid.
                 canceled();
