@@ -17,18 +17,23 @@ public class BasicGraph {
     Vector2 penPosition;
     Rectangle rect;
 
-    String title = "Fake graph title";
+    String title;
 
     public BasicGraph() {
         this(new Vector2(100, 100));
     }
 
     public BasicGraph(Vector2 position) {
+        this(position, "Fake graph title");
+    }
+    public BasicGraph(Vector2 position, String graphTitle){
         shapeRenderer = new ShapeRenderer();
         points = new Array<Vector2>();
         penPosition = position;
+        this.title = graphTitle;
 
-        rect = new Rectangle(position.x-150, position.y-50, 150, 50);
+        int width = 200;
+        rect = new Rectangle(position.x-width, position.y, width, 200);
     }
 
     public void addPoint(Vector2 point){
@@ -75,7 +80,7 @@ public class BasicGraph {
     public void draw(float delta, final RotationFrenzy game){
         drawConnectedPoints(game.batch);
         game.batch.begin();
-        game.font.draw(game.batch, title, rect.x,rect.y + 270, rect.width, Align.center,true);
+        game.font.draw(game.batch, title, rect.x,rect.y + rect.height + 20, rect.width, Align.center,true);
         game.batch.end();
     }
 
@@ -93,6 +98,7 @@ public class BasicGraph {
                 start = end;
             }
 
+            shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
             shapeRenderer.end();
         }
     }

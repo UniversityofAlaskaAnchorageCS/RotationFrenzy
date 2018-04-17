@@ -41,7 +41,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         setupInput();
 
-        chart = new BasicGraph(new Vector2(RotationFrenzy.SCREEN_WIDTH - 100, 150));
+        chart = new BasicGraph(new Vector2(RotationFrenzy.SCREEN_WIDTH - 50, 150));
     }
 
     @Override
