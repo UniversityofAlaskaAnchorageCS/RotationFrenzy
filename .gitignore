@@ -1,0 +1,4 @@
+
+# dotnet bin & obj contents
+PhysicsApp/bin/*
+PhysicsApp/obj/*
