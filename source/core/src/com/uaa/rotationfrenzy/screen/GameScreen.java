@@ -26,8 +26,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     private OrthographicCamera camera;
     private Vector3 touchPoint = new Vector3();
 
-    private Stage stage;
-
     private BasicGraph chart;
 
     public GameScreen(final RotationFrenzy inGame){
@@ -44,8 +42,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         setupInput();
 
         chart = new BasicGraph(new Vector2(RotationFrenzy.SCREEN_WIDTH - 100, 150));
-
-        //stage = new Stage();
     }
 
     @Override
@@ -72,7 +68,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         System.out.println(value);
 
         chart.update(delta, value);
-       // stage.act(delta);
     }
 
     private void draw(float delta){
@@ -85,10 +80,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
             game.batch.begin();
             level.draw(game, delta);
             game.batch.end();
-        }
-        //stage.draw();
 
-        chart.draw(delta, game.batch);
+            chart.draw(delta, game);
+        }
     }
 
 

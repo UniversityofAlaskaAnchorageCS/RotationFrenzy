@@ -1,26 +1,23 @@
 package com.uaa.rotationfrenzy.graph;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.FloatArray;
-
-import javax.print.StreamPrintService;
+import com.uaa.rotationfrenzy.RotationFrenzy;
 
 // This class will be used to hold/display the graph information like omega vs time, etc
 public class BasicGraph {
 
     ShapeRenderer shapeRenderer;
-
     Array<Vector2> points;
-
     Vector2 penPosition;
-
     Rectangle rect;
+
+    String title = "Fake graph title";
 
     public BasicGraph() {
         this(new Vector2(100, 100));
@@ -31,25 +28,28 @@ public class BasicGraph {
         points = new Array<Vector2>();
         penPosition = position;
 
-        rect = new Rectangle(position.x-150, position.y-50, position.x+50, position.y+50);
+        rect = new Rectangle(position.x-150, position.y-50, 150, 50);
     }
 
     public void addPoint(Vector2 point){
-        point.add(penPosition);
+        point.add(penPosition);     // Adjust the drawing position based on where the graph is located.
 
+        // If we have points, make sure we only add a new point whenever the "X" value changes
+        // Reduces the size of our Array as we don't have as many elements in it
         if (points.size > 0) {
             Vector2 firstPoint = points.first();
 
-            if (point.x != firstPoint.x) {
+            // As long as the X values are different (They were converted to INT), add the point
+            if (point.x != firstPoint.x)
                 points.add(point);
-                //System.out.println(point);
-            }
 
         }else{
-            points.add(point);
+            points.add(point);  // No points yet, add the first point
         }
     }
 
+    // We need to remove points from the graph so it doesn't go on forever and cause memory errors.
+    // Remove points outside th "Graph"
     private void pruneGraph(){
         float x = 0;
         while (points.size > 0)
@@ -59,6 +59,7 @@ public class BasicGraph {
                 break;
     }
 
+    // Move the points that graph uses to the left by 50 * change in time
     private void scrollGraph(float delta){
         for (Vector2 point: points){
             point.x -= (delta * 50);
@@ -71,24 +72,18 @@ public class BasicGraph {
         this.pruneGraph();
     }
 
-    public void draw(float delta, SpriteBatch batch){
-        int x = 100, y=100, y2=150,x2=150, width = 20, height = 20, radius = 50;
-
-        drawConnectedPoints(batch);
-
-
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//        shapeRenderer.setColor(1, 1, 0, 1);
-//        shapeRenderer.line(x, y, x2, y2);
-//        shapeRenderer.rect(x, y, width, height);
-//        shapeRenderer.circle(x, y, radius);
-//        shapeRenderer.end();
+    public void draw(float delta, final RotationFrenzy game){
+        drawConnectedPoints(game.batch);
+        game.batch.begin();
+        game.font.draw(game.batch, title, rect.x,rect.y + 270, rect.width, Align.center,true);
+        game.batch.end();
     }
 
+    // Draw all the points by connecting consecutive points in time.
     private void drawConnectedPoints(SpriteBatch batch){
         if (points.size > 1) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(1, 1, 0, 1);
+            shapeRenderer.setColor(Color.YELLOW);
 
             Vector2 start = points.get(0);
             Vector2 end;
