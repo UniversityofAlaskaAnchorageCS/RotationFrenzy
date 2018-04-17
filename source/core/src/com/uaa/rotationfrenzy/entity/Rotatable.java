@@ -190,6 +190,10 @@ public class Rotatable {
         }
     }
 
+    public float getAxisRotationAngle(){
+        return this.sprite.getRotation();
+    }
+
     public Vector2 getPosition() {
         return this.sprite.getCenter();
     }

@@ -11,8 +11,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Json;
 import com.uaa.rotationfrenzy.RotationFrenzy;
+import com.uaa.rotationfrenzy.graph.BasicGraph;
 import com.uaa.rotationfrenzy.level.Level;
 
 // This is the main game screen that runs, taking user input
@@ -24,6 +26,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     private OrthographicCamera camera;
     private Vector3 touchPoint = new Vector3();
 
+    private Stage stage;
+
+    private BasicGraph chart;
 
     public GameScreen(final RotationFrenzy inGame){
         this.game = inGame;
@@ -37,6 +42,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         camera.setToOrtho(false, RotationFrenzy.SCREEN_WIDTH ,RotationFrenzy.SCREEN_HEIGHT);
 
         setupInput();
+
+        chart = new BasicGraph(new Vector2(RotationFrenzy.SCREEN_WIDTH - 100, 150));
+
+        //stage = new Stage();
     }
 
     @Override
@@ -58,6 +67,12 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
             this.level.update(delta);
         }
+
+        float value = level.getWheelRotationDegrees();
+        System.out.println(value);
+
+        chart.update(delta, value);
+       // stage.act(delta);
     }
 
     private void draw(float delta){
@@ -71,6 +86,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
             level.draw(game, delta);
             game.batch.end();
         }
+        //stage.draw();
+
+        chart.draw(delta, game.batch);
     }
 
 

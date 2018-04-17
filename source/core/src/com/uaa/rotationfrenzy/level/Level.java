@@ -225,6 +225,14 @@ public class Level {
         return vector;
     }
 
+    public float getWheelRotationDegrees(){
+        float angle = this.wheel.getAxisRotationAngle();
+        if (angle < 0)
+            angle *=-1;
+
+        return angle;
+    }
+
     // This is where we MOVE or ROTATE all objects
     public void update(float delta){
         wheel.update(delta);
