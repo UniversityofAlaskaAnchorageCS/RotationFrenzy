@@ -85,7 +85,7 @@ public class Level {
         squirrelTexture = RotationFrenzy.assetManager.get("textures/squirrel.png");
         acornTexture = RotationFrenzy.assetManager.get("textures/acorn.png");
         denTexture = RotationFrenzy.assetManager.get("textures/den.jpg");
-        eagleTexture = RotationFrenzy.assetManager.get("textures/eagle.jpg");
+        eagleTexture = RotationFrenzy.assetManager.get("textures/eagle.png");
     }
 
     // Had to make buildLevel public and call it after creating the class
@@ -292,6 +292,41 @@ public class Level {
         float angle = (180 + deltaPos.angle());
 
         return angle;
+    }
+
+    public String getAngleUnitType(){
+        return this.angleUnitType;
+    }
+
+    public boolean isUsingDegrees(){
+        return this.angleUnitType.equalsIgnoreCase("degrees");
+    }
+
+    public boolean isUsingRadians(){
+        return this.angleUnitType.equalsIgnoreCase("radians");
+    }
+
+    // If the type of the level is "Enter" then this requires user textual input.
+    // Otherwise, it is a "Touch" level, and requires no textual input.
+    public boolean hasTextualInput(){
+        return type.equalsIgnoreCase("enter");
+    }
+
+    public boolean isTouchInput(){
+        return type.equalsIgnoreCase("touch");
+    }
+
+    public void setUserAngle(float angle){
+
+        // The core rotation logic assumes radians.
+        // So if we are on a degree level, need to convert to radians.
+        if (this.isUsingDegrees()){
+            angle = angle * MathUtils.degreesToRadians;
+        }
+
+        // Rotate all objects to the appropriate location
+        wheel.setRotationAboutAxis(angle);
+        squirrel.setOrbitRotationAngle(angle);
     }
 
     public void touchDragged(Vector3 newScreenPos, int pointer, Vector3 touchPoint) {

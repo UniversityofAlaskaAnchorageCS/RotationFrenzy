@@ -1,0 +1,15 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Rotation Frenzy";
+}
+<h2>@ViewData["Title"]</h2>
+
+<p>This is a physics game! The time is: @DateTime.Now</p>
+
+<div id="nav-options">
+    <a asp-page="./GenInfo" class="btn btn-primary btn-block">General Information</a>
+    <a asp-page="./Downloads" class="btn btn-primary btn-block">Downloads</a>
+    <a asp-page="./PlayOnline" class="btn btn-primary btn-block">Play Online</a>
+    <a asp-page="./Feedback" class="btn btn-primary btn-block">Feedback</a>
+</div>

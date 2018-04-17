@@ -7,8 +7,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,6 +16,9 @@ import com.badlogic.gdx.utils.Json;
 import com.uaa.rotationfrenzy.RotationFrenzy;
 import com.uaa.rotationfrenzy.graph.BasicGraph;
 import com.uaa.rotationfrenzy.level.Level;
+
+import java.text.ParseException;
+
 
 // This is the main game screen that runs, taking user input
 public class GameScreen implements Screen, GestureDetector.GestureListener, InputProcessor {
@@ -28,12 +31,18 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
     private BasicGraph chart;
 
+    private boolean userPrompted = false;
+    private float angleEntered = 0.0f;
+
+
     public GameScreen(final RotationFrenzy inGame){
         this.game = inGame;
         //this.level = new Level();
 
+        // TODO: Depending on how big the level gets, may need to move this into a loading loop
+        // so the player doesn't think the game froze, for not it loads fast so doesn't matter
         Json json = new Json();
-        this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level4.json"));
+        this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level2.json"));
         this.level.buildLevel();
 
         camera = new OrthographicCamera();
@@ -43,6 +52,39 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         chart = new BasicGraph(new Vector2(RotationFrenzy.SCREEN_WIDTH - 50, 150));
     }
+
+    // This goes with option 1 above, could be pulled out to it's own class
+    public class MyTextInputListener implements Input.TextInputListener {
+        @Override
+        public void input (String text) {
+            try {
+                angleEntered = Float.parseFloat(text);
+
+                // TODO: Validate data range 0-360, and 0-N radians
+                System.out.println("Text entered:" + text);
+
+                level.setUserAngle(angleEntered);
+
+            }catch(NumberFormatException e){
+                // TODO: Display message for user that the value was invalid.
+                canceled();
+            }
+        }
+
+        @Override
+        public void canceled () {
+            userPrompted = false;
+        }
+    }
+
+    // AngleType is a string to display either "Degrees" or "Radians"
+    private void getAngleFromUser(String angleType){
+        // Option 1, popup a textbox to request the degrees
+        MyTextInputListener listener = new MyTextInputListener();
+        Gdx.input.getTextInput(listener, "Enter Angle in " + angleType, "", angleType);
+        this.userPrompted = true;
+    }
+
 
     @Override
     public void render(float delta) {
@@ -60,14 +102,15 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         }
 
         if (!this.isPaused) {
-
             this.level.update(delta);
         }
 
-        float value = level.getWheelRotationDegrees();
-        System.out.println(value);
-
-        chart.update(delta, value);
+        chart.update(delta, level.getWheelRotationDegrees());
+      
+        // If the level requires text input, and we have not yet prompted the user, prompt them
+        if (level.hasTextualInput() && !userPrompted){
+            getAngleFromUser(level.getAngleUnitType());
+        }
     }
 
     private void draw(float delta){
@@ -76,26 +119,27 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         game.batch.setProjectionMatrix(camera.combined);
 
-        if (!this.isPaused) {
+        //if (!this.isPaused) {
             game.batch.begin();
             level.draw(game, delta);
             game.batch.end();
 
             chart.draw(delta, game);
-        }
+        //}
     }
 
-
     private void setupInput(){
-
         //Setup all the Input handling
         InputMultiplexer im = new InputMultiplexer();
         GestureDetector gd = new GestureDetector(this);
         im.addProcessor(gd);
         im.addProcessor(this);
 
-        //Set the input processor to the multiplexer
-        Gdx.input.setInputProcessor(im);
+        //Set the input processor to the multiplexed
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(im);
+
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
@@ -186,7 +230,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         //System.out.println("Touch Dragging it out! " + touchPos);
 
-        this.level.touchDragged(screenPos, pointer, touchPoint);
+        if (this.level.isTouchInput()) {
+            this.level.touchDragged(screenPos, pointer, touchPoint);
+        }
 
         // Update the touchPoint so we can get a DELTA
         touchPoint.x = screenX;	//only gets input from the first touch
