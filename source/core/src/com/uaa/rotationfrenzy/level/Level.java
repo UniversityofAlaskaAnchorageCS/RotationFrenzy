@@ -409,8 +409,14 @@ public class Level {
     // the level over sdcreen should transition to the stage/world select or next level.
     public boolean checkForCompletion(){
         // How close are the angles of rotation for the squirrel and the den?
-        float diff = Math.abs(squirrel.getOrbitRotationAngle() - den.getOrbitRotationAngle())
-                * MathUtils.radiansToDegrees;
+        float squirrelDegrees = squirrel.getOrbitRotationAngle() * MathUtils.radiansToDegrees;
+        float denDegrees = den.getOrbitRotationAngle() * MathUtils.radiansToDegrees;
+
+        if (squirrelDegrees < 0)
+            squirrelDegrees += 360;
+
+
+        float diff = Math.abs(squirrelDegrees - denDegrees);
 
         if (diff < this.DEGREE_THRESHOLD){
             System.out.println("YOU DID IT!  Continue to next level");
@@ -419,7 +425,7 @@ public class Level {
         }else
         {
             attemptsRemaining -= 1;
-            System.out.println("Incorrect angle, try again!");
+            System.out.println("Incorrect angle s[" + squirrelDegrees + "], d[" + denDegrees + "] try again!");
             if (attemptsRemaining < 1) {
                 System.out.println("All attempts used up, please restart the level.");
                 this.levelOutcome = completionTypes.FAILURE;
