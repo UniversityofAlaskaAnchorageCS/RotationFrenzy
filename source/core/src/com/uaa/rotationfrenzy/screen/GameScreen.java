@@ -11,8 +11,10 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Json;
 import com.uaa.rotationfrenzy.RotationFrenzy;
+import com.uaa.rotationfrenzy.graph.BasicGraph;
 import com.uaa.rotationfrenzy.level.Level;
 
 import java.text.ParseException;
@@ -27,8 +29,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     private OrthographicCamera camera;
     private Vector3 touchPoint = new Vector3();
 
+    private BasicGraph chart;
+
     private boolean userPrompted = false;
     private float angleEntered = 0.0f;
+
 
     public GameScreen(final RotationFrenzy inGame){
         this.game = inGame;
@@ -44,6 +49,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         camera.setToOrtho(false, RotationFrenzy.SCREEN_WIDTH ,RotationFrenzy.SCREEN_HEIGHT);
 
         setupInput();
+
+        chart = new BasicGraph(new Vector2(RotationFrenzy.SCREEN_WIDTH - 50, 150));
     }
 
     // This goes with option 1 above, could be pulled out to it's own class
@@ -98,6 +105,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
             this.level.update(delta);
         }
 
+        chart.update(delta, level.getWheelRotationDegrees());
+      
         // If the level requires text input, and we have not yet prompted the user, prompt them
         if (level.hasTextualInput() && !userPrompted){
             getAngleFromUser(level.getAngleUnitType());
@@ -114,6 +123,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
             game.batch.begin();
             level.draw(game, delta);
             game.batch.end();
+
+            chart.draw(delta, game);
         //}
     }
 
