@@ -2,6 +2,7 @@ package com.uaa.rotationfrenzy.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -25,6 +26,12 @@ import static com.badlogic.gdx.math.MathUtils.random;
 
 public class Level {
 
+    public enum completionTypes {
+        SUCCESS,
+        FAILURE,
+        NOT_COMPLETE;
+    }
+
     // Entities we need to display
     Wheel wheel;
     Squirrel squirrel;
@@ -32,8 +39,6 @@ public class Level {
     private Array<Eagle> eagles;
     private Array<Acorn> acorns;
     BasicGraph graph;
-
-    //private String levelQuestion;        // ConvertedString from the
 
     // Values loaded from the level#.json file
     private int levelID;
@@ -68,6 +73,14 @@ public class Level {
     Texture denTexture;
     Texture eagleTexture;
 
+    // Variables that change during level gameplay
+    int attemptsRemaining;
+    String questionString = "";
+    completionTypes levelOutcome = completionTypes.NOT_COMPLETE;
+
+    // Static values
+    public static final int DEGREE_THRESHOLD = 10;  // How close to the den in degrees do we have to be
+
     public Level(){
         wheel = new Wheel();
         den = new Den(0.0f);
@@ -98,6 +111,25 @@ public class Level {
         generateEagles();
         generateAcorns();
         generateDen();
+
+        attemptsRemaining = attempts;
+
+        generateLevelText();
+    }
+
+    private void generateLevelText(){
+        for (Object s: levelQuestion) {
+            String replacedLine = replaceTextPlaceholders(String.valueOf(s));
+            questionString += replacedLine + '\n';
+        }
+    }
+
+    // Allow us to put placeholder values in the text that we can replace upon loading.
+    private String replaceTextPlaceholders(String inString){
+        inString = inString.replaceAll("<angle degrees>", String.valueOf(den.getOrbitRotationAngle() * MathUtils.radiansToDegrees));
+        inString = inString.replaceAll("<angle radians>", String.valueOf(den.getOrbitRotationAngle()));
+
+        return inString;
     }
 
     private void generateWheel(){
@@ -264,16 +296,27 @@ public class Level {
         for (Eagle eagle : eagles)
             eagle.draw(delta, game.batch);
 
-        // Currently just does a straight arraylist to string
-        // this adds a [ and ] and each line is seperated with a comma
-        // need to either change the JSON, or write own toString method
-        game.font.draw(game.batch, levelQuestion.toString(),
+        printQuestion(game, delta);
+        printAttempts(game, delta);
+
+    }
+    
+    private void printQuestion(final RotationFrenzy game, float delta){
+        game.font.draw(game.batch, questionString,
                 20,
                 RotationFrenzy.SCREEN_HEIGHT - 20,
-                RotationFrenzy.SCREEN_WIDTH - 20,
+                RotationFrenzy.SCREEN_WIDTH / 2,
                 Align.left,
                 true);
+    }
 
+    private void printAttempts(final RotationFrenzy game, float delta){
+        game.font.draw(game.batch, "Attemps: " + String.valueOf(attemptsRemaining),
+                RotationFrenzy.SCREEN_WIDTH - 100,
+                RotationFrenzy.SCREEN_HEIGHT - 20,
+                100,
+                Align.left,
+                true);
     }
 
     public void dispose(){
@@ -298,6 +341,8 @@ public class Level {
         return this.angleUnitType;
     }
 
+    // Helpder boolean methods
+
     public boolean isUsingDegrees(){
         return this.angleUnitType.equalsIgnoreCase("degrees");
     }
@@ -316,6 +361,21 @@ public class Level {
         return type.equalsIgnoreCase("touch");
     }
 
+    // Did the user succeed or fail?  If so, the level is "complete"
+    public boolean isLevelComplete(){
+        return this.levelOutcome != completionTypes.NOT_COMPLETE;
+    }
+
+    // Is the user still playing the level?  Or have they lost
+    public boolean isGameOn(){
+        return this.levelOutcome == completionTypes.NOT_COMPLETE;
+    }
+
+    // Are there any attempts left?
+    public boolean areAttemptsLeft(){
+        return this.attemptsRemaining > 0;
+    }
+
     public void setUserAngle(float angle){
 
         // The core rotation logic assumes radians.
@@ -327,6 +387,8 @@ public class Level {
         // Rotate all objects to the appropriate location
         wheel.setRotationAboutAxis(angle);
         squirrel.setOrbitRotationAngle(angle);
+
+        checkForCompletion();
     }
 
     public void touchDragged(Vector3 newScreenPos, int pointer, Vector3 touchPoint) {
@@ -342,4 +404,33 @@ public class Level {
         squirrel.setOrbitRotationAngle(squirrel.getOrbitRotationAngle() + deltaAngle);
     }
 
+    // Check if we are within a threshold for the angle of the den
+    // if we are, the level is complete and we should move to a level over screen
+    // the level over sdcreen should transition to the stage/world select or next level.
+    public boolean checkForCompletion(){
+        // How close are the angles of rotation for the squirrel and the den?
+        float squirrelDegrees = squirrel.getOrbitRotationAngle() * MathUtils.radiansToDegrees;
+        float denDegrees = den.getOrbitRotationAngle() * MathUtils.radiansToDegrees;
+
+        if (squirrelDegrees < 0)
+            squirrelDegrees += 360;
+
+
+        float diff = Math.abs(squirrelDegrees - denDegrees);
+
+        if (diff < this.DEGREE_THRESHOLD){
+            System.out.println("YOU DID IT!  Continue to next level");
+            this.levelOutcome = completionTypes.SUCCESS;
+            return true;
+        }else
+        {
+            attemptsRemaining -= 1;
+            System.out.println("Incorrect angle s[" + squirrelDegrees + "], d[" + denDegrees + "] try again!");
+            if (attemptsRemaining < 1) {
+                System.out.println("All attempts used up, please restart the level.");
+                this.levelOutcome = completionTypes.FAILURE;
+            }
+            return false;
+        }
+    }
 }

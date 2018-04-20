@@ -19,8 +19,8 @@ import com.uaa.rotationfrenzy.screen.MainMenuScreen;
 public class RotationFrenzy extends Game {
 	public SpriteBatch batch;
 	public BitmapFont font;
-	public static final float SCREEN_HEIGHT = 600;
-	public static final float SCREEN_WIDTH = 800;
+	public static final float SCREEN_HEIGHT = 600;//720;
+	public static final float SCREEN_WIDTH = 800;//1024;
 	public static AssetManager assetManager;
 	public static AssetProperties assetProperties;
 	

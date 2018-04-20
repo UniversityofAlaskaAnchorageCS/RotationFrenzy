@@ -1,5 +1,6 @@
 package com.uaa.rotationfrenzy.graph;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -77,16 +78,17 @@ public class BasicGraph {
         this.pruneGraph();
     }
 
-    public void draw(float delta, final RotationFrenzy game){
-        drawConnectedPoints(game.batch);
+    public void draw(float delta, final RotationFrenzy game, Camera camera){
+        drawConnectedPoints(game.batch, camera);
         game.batch.begin();
         game.font.draw(game.batch, title, rect.x,rect.y + rect.height + 20, rect.width, Align.center,true);
         game.batch.end();
     }
 
     // Draw all the points by connecting consecutive points in time.
-    private void drawConnectedPoints(SpriteBatch batch){
+    private void drawConnectedPoints(SpriteBatch batch, Camera camera){
         if (points.size > 1) {
+            shapeRenderer.setProjectionMatrix(camera.combined);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.YELLOW);
 

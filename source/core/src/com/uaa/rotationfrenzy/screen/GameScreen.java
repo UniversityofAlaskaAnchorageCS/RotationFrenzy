@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Json;
 import com.uaa.rotationfrenzy.RotationFrenzy;
 import com.uaa.rotationfrenzy.graph.BasicGraph;
@@ -42,7 +44,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         // TODO: Depending on how big the level gets, may need to move this into a loading loop
         // so the player doesn't think the game froze, for not it loads fast so doesn't matter
         Json json = new Json();
-        this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level2.json"));
+        this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level4.json"));
         this.level.buildLevel();
 
         camera = new OrthographicCamera();
@@ -62,8 +64,14 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
                 // TODO: Validate data range 0-360, and 0-N radians
                 System.out.println("Text entered:" + text);
-
                 level.setUserAngle(angleEntered);
+
+                // If the user did not guess the correct guess, and we have attempts left, continue
+                System.out.println(level.areAttemptsLeft());
+                System.out.println(!level.isLevelComplete());
+                if (level.areAttemptsLeft() && !level.isLevelComplete()){
+                    userPrompted = false;
+                }
 
             }catch(NumberFormatException e){
                 // TODO: Display message for user that the value was invalid.
@@ -121,10 +129,23 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         //if (!this.isPaused) {
             game.batch.begin();
+        game.font.setColor(Color.WHITE);
             level.draw(game, delta);
             game.batch.end();
 
-            chart.draw(delta, game);
+            chart.draw(delta, game, camera);
+
+            if (level.isLevelComplete()){
+                game.batch.begin();
+                game.font.setColor(Color.YELLOW);
+                game.font.draw(game.batch, "Game Over",
+                        RotationFrenzy.SCREEN_WIDTH - 100,
+                        RotationFrenzy.SCREEN_HEIGHT - 50,
+                        100,
+                        Align.left,
+                        true);
+                game.batch.end();
+            }
         //}
     }
 
@@ -213,6 +234,8 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         System.out.println("Touch Up!");
+        if (!level.isLevelComplete())
+            this.level.checkForCompletion();
         return false;
     }
 
@@ -230,7 +253,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         //System.out.println("Touch Dragging it out! " + touchPos);
 
-        if (this.level.isTouchInput()) {
+        if (this.level.isTouchInput() && !level.isLevelComplete()) {
             this.level.touchDragged(screenPos, pointer, touchPoint);
         }
 
