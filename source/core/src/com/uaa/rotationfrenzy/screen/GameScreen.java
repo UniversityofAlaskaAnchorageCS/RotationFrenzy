@@ -124,7 +124,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
             level.draw(game, delta);
             game.batch.end();
 
-            chart.draw(delta, game);
+            chart.draw(delta, game, camera);
         //}
     }
 
