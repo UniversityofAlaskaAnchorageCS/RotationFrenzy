@@ -2,6 +2,7 @@ package com.uaa.rotationfrenzy.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -32,8 +33,6 @@ public class Level {
     private Array<Eagle> eagles;
     private Array<Acorn> acorns;
     BasicGraph graph;
-
-    //private String levelQuestion;        // ConvertedString from the
 
     // Values loaded from the level#.json file
     private int levelID;
@@ -68,6 +67,10 @@ public class Level {
     Texture denTexture;
     Texture eagleTexture;
 
+    // Variables that change during level gameplay
+    int attemptsRemaining;
+    String questionString = "";
+
     public Level(){
         wheel = new Wheel();
         den = new Den(0.0f);
@@ -98,6 +101,25 @@ public class Level {
         generateEagles();
         generateAcorns();
         generateDen();
+
+        attemptsRemaining = attempts;
+
+        generateLevelText();
+    }
+
+    private void generateLevelText(){
+        for (Object s: levelQuestion) {
+            String replacedLine = replaceTextPlaceholders(String.valueOf(s));
+            questionString += replacedLine + '\n';
+        }
+    }
+
+    // Allow us to put placeholder values in the text that we can replace upon loading.
+    private String replaceTextPlaceholders(String inString){
+        inString = inString.replaceAll("<angle degrees>", String.valueOf(den.getOrbitRotationAngle() * MathUtils.radiansToDegrees));
+        inString = inString.replaceAll("<angle radians>", String.valueOf(den.getOrbitRotationAngle()));
+
+        return inString;
     }
 
     private void generateWheel(){
@@ -264,16 +286,29 @@ public class Level {
         for (Eagle eagle : eagles)
             eagle.draw(delta, game.batch);
 
+        printQuestion(game, delta);
+
+        game.font.draw(game.batch, String.valueOf(attemptsRemaining),
+                wheel.getPosition().x - 10,
+                wheel.getPosition().y + 10,
+                25,
+                Align.left,
+                true);
+    }
+    
+    private void printQuestion(final RotationFrenzy game, float delta){
+
+        
+        
         // Currently just does a straight arraylist to string
         // this adds a [ and ] and each line is seperated with a comma
         // need to either change the JSON, or write own toString method
-        game.font.draw(game.batch, levelQuestion.toString(),
+        game.font.draw(game.batch, questionString,
                 20,
                 RotationFrenzy.SCREEN_HEIGHT - 20,
                 RotationFrenzy.SCREEN_WIDTH - 20,
                 Align.left,
                 true);
-
     }
 
     public void dispose(){
