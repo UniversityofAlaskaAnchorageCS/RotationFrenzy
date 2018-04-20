@@ -62,8 +62,14 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
                 // TODO: Validate data range 0-360, and 0-N radians
                 System.out.println("Text entered:" + text);
-
                 level.setUserAngle(angleEntered);
+
+                // If the user did not guess the correct guess, and we have attempts left, continue
+                System.out.println(level.areAttemptsLeft());
+                System.out.println(!level.isLevelComplete());
+                if (level.areAttemptsLeft() && !level.isLevelComplete()){
+                    userPrompted = false;
+                }
 
             }catch(NumberFormatException e){
                 // TODO: Display message for user that the value was invalid.
@@ -213,6 +219,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         System.out.println("Touch Up!");
+        this.level.checkForCompletion();
         return false;
     }
 

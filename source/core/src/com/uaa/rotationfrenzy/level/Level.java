@@ -26,6 +26,12 @@ import static com.badlogic.gdx.math.MathUtils.random;
 
 public class Level {
 
+    public enum completionTypes {
+        SUCCESS,
+        FAILURE,
+        NOT_COMPLETE;
+    }
+
     // Entities we need to display
     Wheel wheel;
     Squirrel squirrel;
@@ -70,6 +76,10 @@ public class Level {
     // Variables that change during level gameplay
     int attemptsRemaining;
     String questionString = "";
+    completionTypes levelOutcome = completionTypes.NOT_COMPLETE;
+
+    // Static values
+    public static final int DEGREE_THRESHOLD = 10;  // How close to the den in degrees do we have to be
 
     public Level(){
         wheel = new Wheel();
@@ -287,26 +297,24 @@ public class Level {
             eagle.draw(delta, game.batch);
 
         printQuestion(game, delta);
+        printAttempts(game, delta);
 
-        game.font.draw(game.batch, String.valueOf(attemptsRemaining),
-                wheel.getPosition().x - 10,
-                wheel.getPosition().y + 10,
-                25,
-                Align.left,
-                true);
     }
     
     private void printQuestion(final RotationFrenzy game, float delta){
-
-        
-        
-        // Currently just does a straight arraylist to string
-        // this adds a [ and ] and each line is seperated with a comma
-        // need to either change the JSON, or write own toString method
         game.font.draw(game.batch, questionString,
                 20,
                 RotationFrenzy.SCREEN_HEIGHT - 20,
-                RotationFrenzy.SCREEN_WIDTH - 20,
+                RotationFrenzy.SCREEN_WIDTH / 2,
+                Align.left,
+                true);
+    }
+
+    private void printAttempts(final RotationFrenzy game, float delta){
+        game.font.draw(game.batch, "Attemps: " + String.valueOf(attemptsRemaining),
+                RotationFrenzy.SCREEN_WIDTH - 100,
+                RotationFrenzy.SCREEN_HEIGHT - 20,
+                100,
                 Align.left,
                 true);
     }
@@ -333,6 +341,8 @@ public class Level {
         return this.angleUnitType;
     }
 
+    // Helpder boolean methods
+
     public boolean isUsingDegrees(){
         return this.angleUnitType.equalsIgnoreCase("degrees");
     }
@@ -351,6 +361,21 @@ public class Level {
         return type.equalsIgnoreCase("touch");
     }
 
+    // Did the user succeed or fail?  If so, the level is "complete"
+    public boolean isLevelComplete(){
+        return this.levelOutcome != completionTypes.NOT_COMPLETE;
+    }
+
+    // Is the user still playing the level?  Or have they lost
+    public boolean isGameOn(){
+        return this.levelOutcome == completionTypes.NOT_COMPLETE;
+    }
+
+    // Are there any attempts left?
+    public boolean areAttemptsLeft(){
+        return this.attemptsRemaining > 0;
+    }
+
     public void setUserAngle(float angle){
 
         // The core rotation logic assumes radians.
@@ -362,6 +387,8 @@ public class Level {
         // Rotate all objects to the appropriate location
         wheel.setRotationAboutAxis(angle);
         squirrel.setOrbitRotationAngle(angle);
+
+        checkForCompletion();
     }
 
     public void touchDragged(Vector3 newScreenPos, int pointer, Vector3 touchPoint) {
@@ -377,4 +404,27 @@ public class Level {
         squirrel.setOrbitRotationAngle(squirrel.getOrbitRotationAngle() + deltaAngle);
     }
 
+    // Check if we are within a threshold for the angle of the den
+    // if we are, the level is complete and we should move to a level over screen
+    // the level over sdcreen should transition to the stage/world select or next level.
+    public boolean checkForCompletion(){
+        // How close are the angles of rotation for the squirrel and the den?
+        float diff = Math.abs(squirrel.getOrbitRotationAngle() - den.getOrbitRotationAngle())
+                * MathUtils.radiansToDegrees;
+
+        if (diff < this.DEGREE_THRESHOLD){
+            System.out.println("YOU DID IT!  Continue to next level");
+            this.levelOutcome = completionTypes.SUCCESS;
+            return true;
+        }else
+        {
+            attemptsRemaining -= 1;
+            System.out.println("Incorrect angle, try again!");
+            if (attemptsRemaining < 1) {
+                System.out.println("All attempts used up, please restart the level.");
+                this.levelOutcome = completionTypes.FAILURE;
+            }
+            return false;
+        }
+    }
 }
