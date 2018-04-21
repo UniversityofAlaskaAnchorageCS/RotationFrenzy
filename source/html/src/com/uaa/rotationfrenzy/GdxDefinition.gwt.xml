@@ -8,4 +8,13 @@
 	<entry-point class='com.uaa.rotationfrenzy.client.HtmlLauncher' />
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
 	<set-configuration-property name="gdx.assetpath" value="../android/assets" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.uaa.rotationfrenzy.level.AssetProperties" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.uaa.rotationfrenzy.level.Level" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.uaa.rotationfrenzy.entity.Den" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.uaa.rotationfrenzy.entity.Acorn" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.uaa.rotationfrenzy.entity.Eagle" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.uaa.rotationfrenzy.entity.Squirrel" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.uaa.rotationfrenzy.entity.Wheel" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.uaa.rotationfrenzy.graph.BasicGraph" />
+	<extend-configuration-property name="gdx.reflect.include" value="java.util.ArrayList" />
 </module>
