@@ -161,8 +161,8 @@ public class MainMenuScreen implements Screen {
             //This only fires when the button is first let up
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("TODO: Add an ABOUT screen");
-                //TODO: Add an about screen
+                dispose();
+                game.setScreen(new AboutScreen(game));
             }
         });
 
