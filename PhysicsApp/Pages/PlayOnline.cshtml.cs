@@ -9,6 +9,8 @@ namespace PhysicsApp.Pages
 {
     public class PlayOnlineModel : PageModel
     {
+        public string distpath = "dist/index.html";
+
         public void OnGet()
         {
 

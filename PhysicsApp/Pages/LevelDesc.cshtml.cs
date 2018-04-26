@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace PhysicsApp.Pages
 {
-    public class GenInfoModel : PageModel
+    public class LevelDescModel : PageModel
     {
         public void OnGet()
         {
