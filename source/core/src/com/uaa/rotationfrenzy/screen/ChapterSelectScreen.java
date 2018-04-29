@@ -48,16 +48,21 @@ public class ChapterSelectScreen implements Screen {
 
         skin = new Skin(Gdx.files.internal("ui/skin/uiskin.json"));
 
-        Texture wheelLevel = RotationFrenzy.assetManager.get("textures/squirrel.png");
+        // TODO: Make these load the correct files
+        // TODO: Add filenames to asset manager in MainMenu so the textures are loaded in MainMenu
+        Texture wheelIcon = RotationFrenzy.assetManager.get("textures/squirrel.png");
         Texture starIcon = RotationFrenzy.assetManager.get("textures/acorn.png");
+        Texture lighthouseIcon = RotationFrenzy.assetManager.get("textures/squirrel.png");
+        Texture walrusIcon = RotationFrenzy.assetManager.get("textures/squirrel.png");
 
-        loadWorldData(wheelLevel, starIcon);
+        loadWorldData(wheelIcon, starIcon);
 
     }
 
     private void loadWorldData(Texture wheelLevel, Texture starIcon){
-        Table panelTable = new Table();;
+        Table panelTable = new Table();
         Table outerTable = new Table();
+        Texture buttonImage;
 
         outerTable.row();
 
@@ -69,11 +74,19 @@ public class ChapterSelectScreen implements Screen {
 
                  JsonValue json = new JsonReader().parse(file);
                  String levelID = json.getString("levelID");
-                 String type = json.getString("type");
-                 //String chapterID = json.getString("chapterID");
-                 //String levelIconName = json.getString("levelIconName");
+                 String chapterID = json.getString("chapterID");
+                 String levelName = json.getString("levelName");
 
-                 panelTable = buildPanel("fakeLevel", starIcon, 1, Integer.parseInt(levelID), file.name());
+                 switch (Integer.parseInt(levelID)){
+                     case 1: buttonImage = starIcon;
+                         break;
+                     case 2: buttonImage = wheelLevel;
+                         break;
+                     default: buttonImage = starIcon;
+                         break;
+                 }
+
+                 panelTable = buildPanel(levelName, buttonImage, Integer.parseInt(chapterID), Integer.parseInt(levelID), file.name());
 
                  // Tell libgdx to figure out the size (width and height) of the object after adding the new panel
                  outerTable.pack();
@@ -83,7 +96,7 @@ public class ChapterSelectScreen implements Screen {
                      outerTable.row();
                  }
 
-                 outerTable.add(panelTable);  // Add the panel to the main table
+                 outerTable.add(panelTable).space(10);;  // Add the panel to the main table
              }
          }
 

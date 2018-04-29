@@ -41,7 +41,9 @@ public class Level {
     BasicGraph graph;
 
     // Values loaded from the level#.json file
+    private int chapterID;
     private int levelID;
+    private String levelName;
     private ArrayList levelQuestion;        // Like "Move the squirel N degrees" multi-line.  Need to convert to string
     private String type;                    // "Enter" a value, or "Touch" the screen.
     private int attempts;                   // how many times they can be wrong on this level before they fail?

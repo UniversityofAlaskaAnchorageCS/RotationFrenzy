@@ -1,5 +1,7 @@
 {
+  "chapterID": 1,
   "levelID": 2,
+  "levelName": "Angles in Radians",
   "levelQuestion": [
     "This arctic ground squirrel needs to get into its den.",
     "Help it “ride the wheel” <some number of Radians> to the den entrance…",
