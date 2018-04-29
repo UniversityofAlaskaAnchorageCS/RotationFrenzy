@@ -2,7 +2,9 @@
 
 ```json
 {
+  "chapterID": 1,
   "levelID": 1,
+  "levelName": "Angles in Degrees",
   "levelQuestion": [
     "This arctic ground squirrel needs to get into its den.",
     "Help it "ride the wheel" <some number of degrees> to the den entrance…",
@@ -30,19 +32,29 @@
 # Level file Definitions
 ---
 ## Level Specific variables
-### _levelID_
+### _chapterID_ << (Required)
 
 * **Data Type:** Integer
-* **Purpose:** May not be needed, level number matching the level in the filename.
+* **Purpose:** Used to populate the Chapter and Level select screen.
 
-### _levelQuestion_
+### _levelID_ << (Required)
+
+* **Data Type:** Integer
+* **Purpose:** Used to populate the Chapter and Level select screen.
+
+### _levelName_ << (Required)
+
+* **Data Type:** String
+* **Purpose:** Used to populate the Chapter and Level select screen.
+
+### _levelQuestion_ << (Required)
 
 * **Data Type:** ArrayList
 * **Purpose:** Text to display to the user describing the level.  
 * **Example:** "Move the squirrel N degrees."
 * **NOTE:** This can be a multi line array with [ "line1",\n "line2", \n etc] with real new lines like the example JSON above.
 
-### _type_
+### _type_ << (Required)
 
 * **Data Type:** String
 * **Purpose:** To define the behavior for the level.
@@ -51,7 +63,7 @@
   * Touch = Level where the player must move the wheel with their finger/mouse to the approx rotation value.
 * **Example:** Enter
 
-### _attempts_
+### _attempts_ << (Required)
 
 * **Data Type:** Integer
 * **Purpose:** Controls how many times the player can be wrong on the level
@@ -61,13 +73,13 @@
 * **Example:** 3
 * **Meaning:* a value of 3 means the get 3 tries.
 
-### _timeLimit_
+### _timeLimit_ << (Required)
 
 * **Data Type:** Integer
 * **Purpose:** Number of seconds the player has on the level before they fail.
 * **Example:** 60
 
-### _angleUnitType_
+### _angleUnitType_ << (Required)
 
 * **Data Type:** String
 * **Purpose:** Define the expected input/output measuring format.
@@ -195,6 +207,7 @@
 
 # History
 
-* 03/21/2018 - Initial version - Jeremy Swartwood
+* 03/21/2018 - Jeremy Swartwood - Initial version 
+* 04/29/2018 - Jeremy Swartwood - Added chapterID, levelName, and Added "required" hints.
 
 
