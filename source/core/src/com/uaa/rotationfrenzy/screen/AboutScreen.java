@@ -87,9 +87,6 @@ public class AboutScreen implements Screen {
         lblTable.add(lblHeaders).pad(10);
         lblTable.add(lblValues);
 
-        //Label lblHeaders = new Label("Idea by:         Katherine Rawlins", skin);
-        //Label lblAbout = new Label("Development by:  Jeremy Swartwood, Max Zaki, Rowan Bulkow.", skin);
-        //Label lblAbout = new Label("Supervised by:   Dr. Kenrick Mock", skin);
         lblTable.setPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight() - 150);
 
         stage.addActor(lblTable);
