@@ -7,11 +7,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonReader;
@@ -29,7 +33,7 @@ public class ChapterSelectScreen implements Screen {
     private Skin skin;
 
     public ChapterSelectScreen(final RotationFrenzy rotationFrenzy){
-        super();
+        //super();
         this.game = rotationFrenzy;
     }
 
@@ -69,7 +73,7 @@ public class ChapterSelectScreen implements Screen {
                  //String chapterID = json.getString("chapterID");
                  //String levelIconName = json.getString("levelIconName");
 
-                 panelTable = buildPanel("fakeLevel", starIcon, 1, Integer.parseInt(levelID));
+                 panelTable = buildPanel("fakeLevel", starIcon, 1, Integer.parseInt(levelID), file.name());
 
                  // Tell libgdx to figure out the size (width and height) of the object after adding the new panel
                  outerTable.pack();
@@ -109,20 +113,18 @@ public class ChapterSelectScreen implements Screen {
         stage.draw();
     }
 
-    private Table buildPanel(String levelName, Texture levelIcon, int chapterId, int levelId){
+    private Table buildPanel(String levelName, Texture levelIcon, final int chapterId, final int levelId, final String levelFilename){
         Table panelTable = new Table(skin);
 
         // Add the level name to the table
         panelTable.row();
         Label lblTitle = new Label(levelName, skin);
         lblTitle.setAlignment(Align.center);
-        panelTable.add(lblTitle).colspan(2);
+        panelTable.add(lblTitle);
 
         // Add the image button
         panelTable.row();
         ImageButton levelButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(levelIcon)));
-        levelButton.setScale(0.01f, 0.01f);
-
         panelTable.add(levelButton);
 
         // Add star images
@@ -131,12 +133,26 @@ public class ChapterSelectScreen implements Screen {
         panelTable.row();
         Label lblChapterLevel = new Label(chapterId + "-" + levelId, skin);
         lblChapterLevel.setAlignment(Align.center);
-        panelTable.add(lblChapterLevel).colspan(2);
+        panelTable.add(lblChapterLevel);
 
         //panelTable.setPosition(drawPosition.x, drawPosition.y);
         panelTable.pack(); // Set the table up so we can call getWeith and getHeight
 
         //stage.addActor(panelTable);
+
+        panelTable.addListener(new ClickListener() {
+            @Override
+            public boolean handle(Event event) {
+                // For some reason the touchUp doesn't flag, using this instead
+                // Could use touchDown, but doing so means when we let up the mouse, the GameScreen thinks we tried to move the wheel, and we didn't
+                if (event.toString().contains("com.badlogic.gdx.scenes.scene2d.utils.ChangeListener$ChangeEvent")){
+                    dispose();
+                    game.setScreen(new GameScreen(game, levelFilename));
+                    return true;
+                }
+                return false;
+            }
+        });
 
         return panelTable;//  new Vector2(panelTable.getWidth(), panelTable.getHeight());
     }
