@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -25,7 +23,7 @@ import com.uaa.rotationfrenzy.RotationFrenzy;
 
 public class ChapterSelectScreen implements Screen {
     OrthographicCamera camera;
-    protected final RotationFrenzy game;
+    private final RotationFrenzy game;
 
     // UI components for Menu
     private Table table;
@@ -182,8 +180,6 @@ public class ChapterSelectScreen implements Screen {
         //panelTable.setPosition(drawPosition.x, drawPosition.y);
         panelTable.pack(); // Set the table up so we can call getWeith and getHeight
 
-        //stage.addActor(panelTable);
-
         panelTable.addListener(new ClickListener() {
             @Override
             public boolean handle(Event event) {
@@ -198,7 +194,7 @@ public class ChapterSelectScreen implements Screen {
             }
         });
 
-        return panelTable;//  new Vector2(panelTable.getWidth(), panelTable.getHeight());
+        return panelTable;
     }
 
     @Override

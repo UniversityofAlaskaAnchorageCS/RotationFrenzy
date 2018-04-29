@@ -67,9 +67,6 @@ public class MainMenuScreen implements Screen {
                 loadAssets(delta);
                 loadingText.add(loadingText.remove()); // This will take the first item in the queue, and add it to the end "rotate" the queue
             } else {
-                // This would be in the menu system instead when we design that
-                //game.setScreen(new GameScreen(game));
-
                 setupButtons();    //Load and create all objects needed for the menu
                 allDoneLoading = true;  //NOthing else to load but assets because we are not using google play
             }

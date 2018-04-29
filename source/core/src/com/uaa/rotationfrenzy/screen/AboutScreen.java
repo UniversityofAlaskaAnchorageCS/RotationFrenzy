@@ -17,9 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.uaa.rotationfrenzy.RotationFrenzy;
 
-/**
- * Created by thisisme1 on 4/20/2018.
- */
 
 public class AboutScreen implements Screen {
     OrthographicCamera camera;
@@ -83,15 +80,12 @@ public class AboutScreen implements Screen {
 
         Label lblValues = new Label("Dr. Katherine Rawlins\n" + "Jeremy Swartwood, Max Zaki\n"+ "Rowan Bulkow\n" + "Dr. Kenrick Mock", skin);
 
-
         lblTable.add(lblHeaders).pad(10);
         lblTable.add(lblValues);
-
         lblTable.setPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight() - 150);
 
         stage.addActor(lblTable);
     }
-
 
     //Lets create a menu to display choices to the user
     private void setupButtons() {
