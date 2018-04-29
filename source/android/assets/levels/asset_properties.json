@@ -6,6 +6,11 @@
     "textures/den.jpg",
     "textures/eagle.png",
     "textures/squirrel.png",
-    "textures/wheel.png"
+    "textures/wheel.png",
+    "textures/icons/acorn.png",
+    "textures/icons/den.jpg",
+    "textures/icons/eagle.png",
+    "textures/icons/redX.png",
+    "textures/icons/chart.png"
   ]
 }

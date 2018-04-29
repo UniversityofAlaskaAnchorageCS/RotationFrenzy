@@ -1,13 +1,15 @@
 {
-  "levelID": 2,
+  "chapterID": 1,
+  "levelID": 1,
+  "levelName": "Angles in Degrees",
   "levelQuestion": [
     "This arctic ground squirrel needs to get into its den.",
-    "Help it “ride the wheel” <some number of Radians> to the den entrance…",
+    "Help it “ride the wheel” (some # of degrees) to the den entrance…",
     "(If you miss, an eagle swoops in and eats the squirrel.)"],
   "type": "Enter",
   "attempts": 3,
   "timeLimit": 60,
-  "angleUnitType": "Radians",
+  "angleUnitType": "Degrees",
   "denExists": true,
   "denStartVisible": true,
   "denStartRotationMin": 30,

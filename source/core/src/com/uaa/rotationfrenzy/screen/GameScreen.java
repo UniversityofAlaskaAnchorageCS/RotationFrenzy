@@ -37,14 +37,14 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     private float angleEntered = 0.0f;
 
 
-    public GameScreen(final RotationFrenzy inGame){
+    public GameScreen(final RotationFrenzy inGame, String levelName){
         this.game = inGame;
         //this.level = new Level();
 
         // TODO: Depending on how big the level gets, may need to move this into a loading loop
         // so the player doesn't think the game froze, for not it loads fast so doesn't matter
         Json json = new Json();
-        this.level = json.fromJson(Level.class, Gdx.files.internal("levels/level4.json"));
+        this.level = json.fromJson(Level.class, Gdx.files.internal("levels/" + levelName));
         this.level.buildLevel();
 
         camera = new OrthographicCamera();
