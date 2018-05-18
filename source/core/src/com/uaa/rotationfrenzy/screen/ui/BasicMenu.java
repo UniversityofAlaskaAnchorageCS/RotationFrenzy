@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -30,6 +31,7 @@ public class BasicMenu {
     private String buttonPressed = "None";
 
     private Stage stage;
+    Table menuTable;
 
     public BasicMenu(){
         stage = new Stage();
@@ -64,8 +66,34 @@ public class BasicMenu {
         this.position = position;
     }
 
+    public BasicMenu(Texture background, String menuName){
+        statistics = new ArrayMap<String, String>();
+        this.background = background;
+        this.menuName = menuName;
+        this.position = new Vector2(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight() / 2); // Center of screen
+    }
+
+    public BasicMenu(Texture background, String menuName, Vector2 position){
+        statistics = new ArrayMap<String, String>();
+        this.background = background;
+        this.menuName = menuName;
+        this.position = position;
+    }
+
+    // Helper method to make setting the position easier
+    public void setPosition(float x, float y){
+        this.setPosition(new Vector2(x, y));
+    }
+
     public void setPosition(Vector2 newPosition){
+        Vector2 diff = newPosition.sub(this.position);
         this.position = newPosition;
+
+        // If the table is already creatred, changing the position variable won't make a difference
+        // Need to adjust the table's position by the difference
+        if (menuTable != null){
+            menuTable.moveBy(diff.x, diff.y);
+        }
     }
 
     // Set the text for the button (left)
@@ -88,30 +116,30 @@ public class BasicMenu {
         Gdx.input.setInputProcessor(stage); // WIthout this the buttons will not work
 
         Skin skin = new Skin(Gdx.files.internal("ui/skin/uiskin.json"));
-        Table lblTable = new Table(skin);
+        menuTable = new Table(skin);
 
         // Add the Title for the menu
-        lblTable.row();
+        menuTable.row();
         Label lblTitle = new Label(menuName, skin);
         lblTitle.setAlignment(Align.center);
         lblTitle.setColor(Color.CHARTREUSE);
-        lblTable.add(lblTitle).colspan(2).pad(5);
+        menuTable.add(lblTitle).colspan(2).pad(5);
 
         // Build the Data that the user wants to display
         // For instance, lists of stats like times played, timed completed, times failed, max stars
         for (ObjectMap.Entry map: this.statistics) {
-            lblTable.row();
+            menuTable.row();
             Label lblKey = new Label(map.key.toString(), skin);
             lblKey.setColor(Color.FIREBRICK);
             lblKey.setAlignment(Align.right);
 
             Label lblValues = new Label(map.value.toString(), skin);
-            lblTable.add(lblKey).padRight(10).padLeft(5);
-            lblTable.add(lblValues).padLeft(10).padRight(5);
+            menuTable.add(lblKey).padRight(10).padLeft(5);
+            menuTable.add(lblValues).padLeft(10).padRight(5);
         }
 
         // Make the buttons go on the next line/row
-        lblTable.row();
+        menuTable.row();
 
         // Add Buttons (Ok / Cancel) User can override the wording
         TextButton leftButton = new TextButton(leftButtonText, skin, "default");
@@ -139,21 +167,21 @@ public class BasicMenu {
         });
 
         // Add the left/right buttons to the table
-        lblTable.add(leftButton).pad(10);
-        lblTable.add(rightButton).pad(10);
+        menuTable.add(leftButton).pad(10);
+        menuTable.add(rightButton).pad(10);
 
         // If there is a background, add it, tiled, as the background of this "popup"
         if (background != null)
-            lblTable.setBackground(new TiledDrawable(new TextureRegion(background)));
+            menuTable.setBackground(new TiledDrawable(new TextureRegion(background)));
 
         // Pack it so the texture shows up, not sure why but if you do not do this the background texture will not be displayed
-        lblTable.pack();
+        menuTable.pack();
 
         // Center the table
-        lblTable.setPosition(this.position.x - lblTable.getWidth()/2,this.position.y - lblTable.getHeight()/2);
+        menuTable.setPosition(this.position.x - menuTable.getWidth()/2,this.position.y - menuTable.getHeight()/2);
 
         // Add the table to trhe stage so that the libgdx Scene2d code will update and draw it for us
-        stage.addActor(lblTable);
+        stage.addActor(menuTable);
     }
 
     public void update(float delta){

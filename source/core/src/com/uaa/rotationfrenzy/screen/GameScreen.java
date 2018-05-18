@@ -166,22 +166,31 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
                         true);
                 game.batch.end();
 
-                if (gameOverMenu == null && level.isLevelFailed()){
-                    Texture menuBackground = RotationFrenzy.assetManager.get("textures/simple_tile.png");
-                    ArrayMap<String, String> items = new ArrayMap<String, String>();
-                    //items.put("Game over", "You lost!");
-                    gameOverMenu = new BasicMenu(items, menuBackground, "Game Over Screen");
-                    gameOverMenu.setLeftButtonText("Retry");
-                    gameOverMenu.setRightButtonText("Exit");
-                    gameOverMenu.BuildMenu();
-                }
-
+                buildGameOverMenu();
             }
 
         if (gameOverMenu != null){
             gameOverMenu.draw();
         }
         //}
+    }
+
+    private void buildGameOverMenu(){
+        if (gameOverMenu == null && level.isLevelFailed()){
+            Texture menuBackground = RotationFrenzy.assetManager.get("textures/simple_tile.png");
+
+            ArrayMap<String, String> items = new ArrayMap<String, String>();
+            items.put("Demonstration only", "Remove these");
+            items.put("Times played", "2");
+            items.put("Max Stars", "3");
+            items.put("Times Successful", "0");
+            items.put("Times Failed", "2");
+
+            gameOverMenu = new BasicMenu(items, menuBackground, "Game Over Screen");
+            gameOverMenu.setLeftButtonText("Retry");
+            gameOverMenu.setRightButtonText("Exit");
+            gameOverMenu.BuildMenu();
+        }
     }
 
     private void setupInput(){
