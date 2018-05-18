@@ -368,6 +368,10 @@ public class Level {
         return this.levelOutcome != completionTypes.NOT_COMPLETE;
     }
 
+    public boolean isLevelFailed() {
+        return this.levelOutcome == completionTypes.FAILURE;
+    }
+
     // Is the user still playing the level?  Or have they lost
     public boolean isGameOn(){
         return this.levelOutcome == completionTypes.NOT_COMPLETE;
