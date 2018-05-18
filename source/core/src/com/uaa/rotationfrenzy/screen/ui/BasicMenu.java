@@ -64,6 +64,10 @@ public class BasicMenu {
         this.position = position;
     }
 
+    public void setPosition(Vector2 newPosition){
+        this.position = newPosition;
+    }
+
     // Set the text for the button (left)
     public void setLeftButtonText(String leftButtonText){
         this.leftButtonText = leftButtonText;
