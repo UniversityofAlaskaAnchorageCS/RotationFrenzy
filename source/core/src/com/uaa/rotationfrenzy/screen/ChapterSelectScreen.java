@@ -106,8 +106,8 @@ public class ChapterSelectScreen implements Screen {
 
         switch (levelId){
             case 1: buttonImage = denIcon;
-                break;
-            case 2: buttonImage = redCross;
+            break;
+            case 2: buttonImage = denIcon;
                 break;
             case 3: buttonImage = denIcon;
                 break;

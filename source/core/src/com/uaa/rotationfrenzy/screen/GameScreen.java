@@ -8,16 +8,19 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.Json;
 import com.uaa.rotationfrenzy.RotationFrenzy;
 import com.uaa.rotationfrenzy.graph.BasicGraph;
 import com.uaa.rotationfrenzy.level.Level;
+import com.uaa.rotationfrenzy.screen.ui.BasicMenu;
 
 import java.text.ParseException;
 
@@ -36,9 +39,14 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     private boolean userPrompted = false;
     private float angleEntered = 0.0f;
 
+    private BasicMenu gameOverMenu;
+
+    private String levelFilename;
+
 
     public GameScreen(final RotationFrenzy inGame, String levelName){
         this.game = inGame;
+        this.levelFilename = levelName;
         //this.level = new Level();
 
         // TODO: Depending on how big the level gets, may need to move this into a loading loop
@@ -119,6 +127,18 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         if (level.hasTextualInput() && !userPrompted){
             getAngleFromUser(level.getAngleUnitType());
         }
+
+        if (gameOverMenu != null){
+            gameOverMenu.update(delta);
+            String whichButton = gameOverMenu.checkButtonPressed();
+            if (whichButton.equalsIgnoreCase("left")){
+                this.dispose();
+                game.setScreen(new GameScreen(game, levelFilename));
+            }else if (whichButton.equalsIgnoreCase("right")){
+                this.dispose();
+                game.setScreen(new MainMenuScreen(game));
+            }
+        }
     }
 
     private void draw(float delta){
@@ -135,7 +155,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
             chart.draw(delta, game, camera);
 
-            if (level.isLevelComplete()){
+            if (level.isLevelComplete()) {
                 game.batch.begin();
                 game.font.setColor(Color.YELLOW);
                 game.font.draw(game.batch, "Game Over",
@@ -145,8 +165,32 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
                         Align.left,
                         true);
                 game.batch.end();
+
+                buildGameOverMenu();
             }
+
+        if (gameOverMenu != null){
+            gameOverMenu.draw();
+        }
         //}
+    }
+
+    private void buildGameOverMenu(){
+        if (gameOverMenu == null && level.isLevelFailed()){
+            Texture menuBackground = RotationFrenzy.assetManager.get("textures/simple_tile.png");
+
+            ArrayMap<String, String> items = new ArrayMap<String, String>();
+            items.put("Demonstration only", "Remove these");
+            items.put("Times played", "2");
+            items.put("Max Stars", "3");
+            items.put("Times Successful", "0");
+            items.put("Times Failed", "2");
+
+            gameOverMenu = new BasicMenu(items, menuBackground, "Game Over Screen");
+            gameOverMenu.setLeftButtonText("Retry");
+            gameOverMenu.setRightButtonText("Exit");
+            gameOverMenu.BuildMenu();
+        }
     }
 
     private void setupInput(){
