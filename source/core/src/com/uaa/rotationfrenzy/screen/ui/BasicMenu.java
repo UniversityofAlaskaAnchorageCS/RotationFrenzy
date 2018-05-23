@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ArrayMap;
@@ -24,11 +25,19 @@ public class BasicMenu {
     private ArrayMap<String, String> statistics;
     private Texture background;
     private Vector2 position;
+    private String inputMessage;
 
     // Defaults
     private String leftButtonText = "Ok";
     private String rightButtonText = "Cancel";
     private String buttonPressed = "None";
+
+    // Visiblity of controls
+    private boolean showTitle = true;
+    private boolean showText = true;
+    private boolean showInput = true;  // User must ask for this to be an input textbox
+    private boolean showLeftButton = true;
+    private boolean showRightButton = true;
 
     private Stage stage;
     Table menuTable;
@@ -78,6 +87,62 @@ public class BasicMenu {
         this.background = background;
         this.menuName = menuName;
         this.position = position;
+    }
+
+    public BasicMenu(Texture background, String menuName, Vector2 position, String inputMessage){
+        statistics = new ArrayMap<String, String>();
+        this.background = background;
+        this.menuName = menuName;
+        this.position = position;
+        this.inputMessage = inputMessage;
+    }
+
+    public String getInputMessage(){
+        return inputMessage;
+    }
+
+    public void setInputMessage(String inputMessage){
+        this.inputMessage = inputMessage;
+    }
+
+    public boolean isShowTitle() {
+        return showTitle;
+    }
+
+    public void setShowTitle(boolean showTitle) {
+        this.showTitle = showTitle;
+    }
+
+    public boolean isShowText() {
+        return showText;
+    }
+
+    public void setShowText(boolean showText) {
+        this.showText = showText;
+    }
+
+    public boolean isShowInput() {
+        return showInput;
+    }
+
+    public void setShowInput(boolean showInput) {
+        this.showInput = showInput;
+    }
+
+    public boolean isShowLeftButton() {
+        return showLeftButton;
+    }
+
+    public void setShowLeftButton(boolean showLeftButton) {
+        this.showLeftButton = showLeftButton;
+    }
+
+    public boolean isShowRightButton() {
+        return showRightButton;
+    }
+
+    public void setShowRightButton(boolean showRightButton) {
+        this.showRightButton = showRightButton;
     }
 
     // Helper method to make setting the position easier
@@ -147,6 +212,20 @@ public class BasicMenu {
         }
     }
 
+    private void SetupTextInput(Skin skin){
+        // Only show the input box if this is an input menu
+        if (showInput){
+            menuTable.row();
+            Label descLabel = new Label(inputMessage, skin);
+            descLabel.setColor(Color.FIREBRICK);
+            descLabel.setAlignment(Align.right);
+
+            TextField userInput = new TextField("", skin);
+            menuTable.add(descLabel).padRight(10).padLeft(5);
+            menuTable.add(userInput).padLeft(10).padRight(5);
+        }
+    }
+
     private void SetupButtonsd(Skin skin){
         // Make the buttons go on the next line/row
         menuTable.row();
@@ -198,13 +277,14 @@ public class BasicMenu {
         // Add the table to trhe stage so that the libgdx Scene2d code will update and draw it for us
         stage.addActor(menuTable);
     }
-    
+
     public void BuildMenu(){
         SetupStage();
         Skin skin = SetupTable();
 
         SetupTitle(skin);
         SetupDisplayText(skin);
+        SetupTextInput(skin);
         SetupButtonsd(skin);
 
         SetupBackground();
