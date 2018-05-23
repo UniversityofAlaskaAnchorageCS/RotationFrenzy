@@ -111,20 +111,28 @@ public class BasicMenu {
         return this.buttonPressed;
     }
 
-    public void BuildMenu(){
+    private void SetupStage(){
         stage = new Stage();
         Gdx.input.setInputProcessor(stage); // WIthout this the buttons will not work
+    }
 
+    private Skin SetupTable(){
         Skin skin = new Skin(Gdx.files.internal("ui/skin/uiskin.json"));
         menuTable = new Table(skin);
 
+        return skin;
+    }
+
+    private void SetupTitle(Skin skin){
         // Add the Title for the menu
         menuTable.row();
         Label lblTitle = new Label(menuName, skin);
         lblTitle.setAlignment(Align.center);
         lblTitle.setColor(Color.CHARTREUSE);
         menuTable.add(lblTitle).colspan(2).pad(5);
+    }
 
+    private void SetupDisplayText(Skin skin){
         // Build the Data that the user wants to display
         // For instance, lists of stats like times played, timed completed, times failed, max stars
         for (ObjectMap.Entry map: this.statistics) {
@@ -137,7 +145,9 @@ public class BasicMenu {
             menuTable.add(lblKey).padRight(10).padLeft(5);
             menuTable.add(lblValues).padLeft(10).padRight(5);
         }
+    }
 
+    private void SetupButtonsd(Skin skin){
         // Make the buttons go on the next line/row
         menuTable.row();
 
@@ -169,11 +179,16 @@ public class BasicMenu {
         // Add the left/right buttons to the table
         menuTable.add(leftButton).pad(10);
         menuTable.add(rightButton).pad(10);
+    }
 
+    private void SetupBackground(){
         // If there is a background, add it, tiled, as the background of this "popup"
         if (background != null)
             menuTable.setBackground(new TiledDrawable(new TextureRegion(background)));
+    }
 
+
+    private void FinalizeTable(){
         // Pack it so the texture shows up, not sure why but if you do not do this the background texture will not be displayed
         menuTable.pack();
 
@@ -182,6 +197,18 @@ public class BasicMenu {
 
         // Add the table to trhe stage so that the libgdx Scene2d code will update and draw it for us
         stage.addActor(menuTable);
+    }
+    
+    public void BuildMenu(){
+        SetupStage();
+        Skin skin = SetupTable();
+
+        SetupTitle(skin);
+        SetupDisplayText(skin);
+        SetupButtonsd(skin);
+
+        SetupBackground();
+        FinalizeTable();
     }
 
     public void update(float delta){
