@@ -10,10 +10,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.Json;
@@ -21,8 +19,6 @@ import com.uaa.rotationfrenzy.RotationFrenzy;
 import com.uaa.rotationfrenzy.graph.BasicGraph;
 import com.uaa.rotationfrenzy.level.Level;
 import com.uaa.rotationfrenzy.screen.ui.BasicMenu;
-
-import java.text.ParseException;
 
 
 // This is the main game screen that runs, taking user input
@@ -75,8 +71,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
                 level.setUserAngle(angleEntered);
 
                 // If the user did not guess the correct guess, and we have attempts left, continue
-                System.out.println(level.areAttemptsLeft());
-                System.out.println(!level.isLevelComplete());
                 if (level.areAttemptsLeft() && !level.isLevelComplete()){
                     userPrompted = false;
                 }
