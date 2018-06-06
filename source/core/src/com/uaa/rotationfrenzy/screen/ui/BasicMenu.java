@@ -244,38 +244,50 @@ public class BasicMenu {
         }
     }
 
-    private void SetupButtonsd(Skin skin){
+    private void SetupButtons(Skin skin){
         // Make the buttons go on the next line/row
         menuTable.row();
 
         // Add Buttons (Ok / Cancel) User can override the wording
-        TextButton leftButton = new TextButton(leftButtonText, skin, "default");
-        leftButton.addListener(new InputListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
+        if (showLeftButton) {
+            TextButton leftButton = new TextButton(leftButtonText, skin, "default");
+            leftButton.addListener(new InputListener() {
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    return true;
+                }
 
-            @Override  //This only fires when the button is first let up
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonPressed = "LEFT";
-            }
-        });
+                @Override  //This only fires when the button is first let up
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    buttonPressed = "LEFT";
+                }
+            });
 
-        TextButton rightButton = new TextButton(rightButtonText, skin, "default");
-        rightButton.addListener(new InputListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
+            // Add the right buttons to the table, if the other button is missing merge the cells
+            if (!showRightButton)
+                menuTable.add(leftButton).colspan(2).padLeft(3).padRight(3).padBottom(2).padTop(4);
+            else
+                menuTable.add(leftButton).padLeft(3).padRight(3).padBottom(2).padTop(4);
+        }
 
-            @Override  //This only fires when the button is first let up
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonPressed = "RIGHT";
-            }
-        });
+        if (showRightButton) {
+            TextButton rightButton = new TextButton(rightButtonText, skin, "default");
+            rightButton.addListener(new InputListener() {
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    return true;
+                }
 
-        // Add the left/right buttons to the table
-        menuTable.add(leftButton).padLeft(3).padRight(3).padBottom(2).padTop(4);
-        menuTable.add(rightButton).padLeft(3).padRight(3).padBottom(2).padTop(4);
+                @Override  //This only fires when the button is first let up
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    buttonPressed = "RIGHT";
+                }
+            });
+
+            // Add the right buttons to the table, if the other button is missing merge the cells
+            if (!showLeftButton)
+                menuTable.add(rightButton).colspan(2).padLeft(3).padRight(3).padBottom(2).padTop(4);
+            else
+                menuTable.add(rightButton).padLeft(3).padRight(3).padBottom(2).padTop(4);
+        }
     }
 
     private void SetupBackground(){
@@ -305,7 +317,7 @@ public class BasicMenu {
         SetupTitle(skin);
         SetupDisplayText(skin);
         SetupTextInput(skin);
-        SetupButtonsd(skin);
+        SetupButtons(skin);
 
         SetupBackground();
         FinalizeTable();
