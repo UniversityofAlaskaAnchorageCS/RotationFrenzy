@@ -104,45 +104,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         this.userPrompted = true;
     }
 
-
-    @Override
-    public void render(float delta) {
-        // We pass the delta, which is the change in time since the last time render was called
-        update(delta);
-        draw(delta);
-    }
-
-    private void update(float delta){
-        camera.update();
-        game.batch.setProjectionMatrix(camera.combined);
-
-        if (Gdx.input.isKeyPressed(Input.Keys.P)) {
-            this.isPaused = !this.isPaused;
-        }
-
-        if (!this.isPaused) {
-            this.level.update(delta);
-        }
-
-        chart.update(delta, level.getWheelRotationDegrees());
-      
-        // If the level requires text input, and we have not yet prompted the user, prompt them
-        if (level.hasTextualInput() && !userPrompted){
-            getAngleFromUser(level.getAngleUnitType());
-        }
-
-        if (gameOverMenu != null){
-            gameOverMenu.update(delta);
-            String whichButton = gameOverMenu.checkButtonPressed();
-            if (whichButton.equalsIgnoreCase("left")){
-                this.dispose();
-                game.setScreen(new GameScreen(game, levelFilename));
-            }else if (whichButton.equalsIgnoreCase("right")){
-                this.dispose();
-                game.setScreen(new MainMenuScreen(game));
-            }
-        }
-
+    private void handleInputUpdate(float delta){
         if (inputMenu != null){
             inputMenu.update(delta);
             String whichButton = inputMenu.checkButtonPressed();
@@ -181,15 +143,62 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         }
     }
 
+    private void handleGameOver(float delta){
+        if (gameOverMenu != null){
+            gameOverMenu.update(delta);
+            String whichButton = gameOverMenu.checkButtonPressed();
+            if (whichButton.equalsIgnoreCase("left")){
+                this.dispose();
+                game.setScreen(new GameScreen(game, levelFilename));
+            }else if (whichButton.equalsIgnoreCase("right")){
+                this.dispose();
+                game.setScreen(new MainMenuScreen(game));
+            }
+        }
+    }
+
+
+    @Override
+    public void render(float delta) {
+        // We pass the delta, which is the change in time since the last time render was called
+        update(delta);
+        draw(delta);
+    }
+
+    private void update(float delta){
+        camera.update();
+        game.batch.setProjectionMatrix(camera.combined);
+
+        if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+            this.isPaused = !this.isPaused;
+        }
+
+        if (!this.isPaused) {
+            this.level.update(delta);
+        }
+
+        chart.update(delta, level.getWheelRotationDegrees());
+      
+        // If the level requires text input, and we have not yet prompted the user, prompt them
+        if (level.hasTextualInput() && !userPrompted){
+            getAngleFromUser(level.getAngleUnitType());
+        }
+
+
+        handleGameOver(delta);
+        handleInputUpdate(delta);
+    }
+
     private void draw(float delta){
         Gdx.gl.glClearColor(0.1f, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.batch.setProjectionMatrix(camera.combined);
 
+        // TODO: Correctly handle paused state to update, but not allow wheel to move etc
         //if (!this.isPaused) {
             game.batch.begin();
-        game.font.setColor(Color.WHITE);
+            game.font.setColor(Color.WHITE);
             level.draw(game, delta);
             game.batch.end();
 
@@ -209,18 +218,16 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
                 buildGameOverMenu();
             }
 
-        if (gameOverMenu != null){
-            gameOverMenu.draw();
-        }
+            if (gameOverMenu != null)
+                gameOverMenu.draw();
 
-        if (inputMenu != null){
-            inputMenu.draw();
-        }
+            if (inputMenu != null)
+                inputMenu.draw();
         //}
     }
 
     private void buildGameOverMenu(){
-        if (gameOverMenu == null && level.isLevelFailed()){
+        if (gameOverMenu == null) {
             Texture menuBackground = RotationFrenzy.assetManager.get("textures/simple_tile.png");
 
             ArrayMap<String, String> items = new ArrayMap<String, String>();
@@ -230,8 +237,18 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
             items.put("Times Successful", "0");
             items.put("Times Failed", "2");
 
-            gameOverMenu = new BasicMenu(items, menuBackground, "Game Over Screen");
-            gameOverMenu.setLeftButtonText("Retry");
+
+            if (level.isLevelFailed()){
+                gameOverMenu = new BasicMenu(items, menuBackground, "Level Failed.");
+                gameOverMenu.setLeftButtonText("Retry");
+            }
+            else {
+                // gameOverMenu.setLeftButtonText("Next Level");
+                gameOverMenu = new BasicMenu(items, menuBackground, "Level Complete!");
+                gameOverMenu.setShowLeftButton(false); // Only option on a win is exit
+                // TODO: Add in "continue" button functionality to next level
+            }
+
             gameOverMenu.setRightButtonText("Exit");
             gameOverMenu.BuildMenu();
         }
