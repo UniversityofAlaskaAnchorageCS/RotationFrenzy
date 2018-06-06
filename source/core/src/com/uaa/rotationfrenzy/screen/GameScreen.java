@@ -93,7 +93,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     // AngleType is a string to display either "Degrees" or "Radians"
     private void getAngleFromUser(String angleType){
         Texture menuBackground = RotationFrenzy.assetManager.get("textures/simple_tile.png");
-        inputMenu = new BasicMenu(menuBackground, "Enter the Angle", new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2), angleType);
+        inputMenu = new BasicMenu(menuBackground, "Enter the Angle", new Vector2(Gdx.graphics.getWidth() * (3.0f/4.0f), Gdx.graphics.getHeight() * (3.0f/4.0f)), angleType);
         inputMenu.setLeftButtonText("Ok");
         inputMenu.setRightButtonText("Exit to Menu");
         inputMenu.BuildMenu();
