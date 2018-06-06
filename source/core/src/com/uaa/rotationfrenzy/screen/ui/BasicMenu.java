@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -25,17 +24,19 @@ public class BasicMenu {
     private ArrayMap<String, String> statistics;
     private Texture background;
     private Vector2 position;
-    private String inputMessage;
+    private String inputDisplayMessage;
+    private TextField userInput;
 
     // Defaults
     private String leftButtonText = "Ok";
     private String rightButtonText = "Cancel";
     private String buttonPressed = "None";
+    private int maxCharacters = 4;
 
     // Visiblity of controls
     private boolean showTitle = true;
     private boolean showText = true;
-    private boolean showInput = true;  // User must ask for this to be an input textbox
+    private boolean showInput = false;  // User must ask for this to be an input textbox
     private boolean showLeftButton = true;
     private boolean showRightButton = true;
 
@@ -89,20 +90,29 @@ public class BasicMenu {
         this.position = position;
     }
 
-    public BasicMenu(Texture background, String menuName, Vector2 position, String inputMessage){
+    public BasicMenu(Texture background, String menuName, Vector2 position, String inputDisplayMessage){
         statistics = new ArrayMap<String, String>();
         this.background = background;
         this.menuName = menuName;
         this.position = position;
-        this.inputMessage = inputMessage;
+        this.inputDisplayMessage = inputDisplayMessage;
+        this.showInput = true; // Passed in an input message, show the menu
     }
 
-    public String getInputMessage(){
-        return inputMessage;
+    public String getUserInput(){
+        if (showInput && this.userInput != null){
+            return this.userInput.getText();
+        }else{
+            return "";
+        }
     }
 
-    public void setInputMessage(String inputMessage){
-        this.inputMessage = inputMessage;
+    public String getInputDisplayMessage(){
+        return inputDisplayMessage;
+    }
+
+    public void setInputDisplayMessage(String inputDisplayMessage){
+        this.inputDisplayMessage = inputDisplayMessage;
     }
 
     public boolean isShowTitle() {
@@ -145,6 +155,14 @@ public class BasicMenu {
         this.showRightButton = showRightButton;
     }
 
+    public int getMaxCharacters() {
+        return maxCharacters;
+    }
+
+    public void setMaxCharacters(int maxCharacters) {
+        this.maxCharacters = maxCharacters;
+    }
+
     // Helper method to make setting the position easier
     public void setPosition(float x, float y){
         this.setPosition(new Vector2(x, y));
@@ -154,7 +172,7 @@ public class BasicMenu {
         Vector2 diff = newPosition.sub(this.position);
         this.position = newPosition;
 
-        // If the table is already creatred, changing the position variable won't make a difference
+        // If the table is already created, changing the position variable won't make a difference
         // Need to adjust the table's position by the difference
         if (menuTable != null){
             menuTable.moveBy(diff.x, diff.y);
@@ -193,8 +211,8 @@ public class BasicMenu {
         menuTable.row();
         Label lblTitle = new Label(menuName, skin);
         lblTitle.setAlignment(Align.center);
-        lblTitle.setColor(Color.CHARTREUSE);
-        menuTable.add(lblTitle).colspan(2).pad(5);
+        lblTitle.setColor(Color.GREEN);
+        menuTable.add(lblTitle).colspan(2).padLeft(3).padRight(3).padBottom(1).padTop(2);
     }
 
     private void SetupDisplayText(Skin skin){
@@ -203,12 +221,12 @@ public class BasicMenu {
         for (ObjectMap.Entry map: this.statistics) {
             menuTable.row();
             Label lblKey = new Label(map.key.toString(), skin);
-            lblKey.setColor(Color.FIREBRICK);
+            lblKey.setColor(Color.WHITE);
             lblKey.setAlignment(Align.right);
 
             Label lblValues = new Label(map.value.toString(), skin);
-            menuTable.add(lblKey).padRight(10).padLeft(5);
-            menuTable.add(lblValues).padLeft(10).padRight(5);
+            menuTable.add(lblKey).padRight(7).padLeft(3);
+            menuTable.add(lblValues).padLeft(7).padRight(3);
         }
     }
 
@@ -216,13 +234,13 @@ public class BasicMenu {
         // Only show the input box if this is an input menu
         if (showInput){
             menuTable.row();
-            Label descLabel = new Label(inputMessage, skin);
-            descLabel.setColor(Color.FIREBRICK);
+            Label descLabel = new Label(inputDisplayMessage, skin);
+            descLabel.setColor(Color.WHITE);
             descLabel.setAlignment(Align.right);
 
-            TextField userInput = new TextField("", skin);
-            menuTable.add(descLabel).padRight(10).padLeft(5);
-            menuTable.add(userInput).padLeft(10).padRight(5);
+            userInput = new TextField("", skin);
+            menuTable.add(descLabel).padRight(7).padLeft(3);
+            menuTable.add(userInput).padLeft(7).padRight(3).width(this.maxCharacters * 13);
         }
     }
 
@@ -256,8 +274,8 @@ public class BasicMenu {
         });
 
         // Add the left/right buttons to the table
-        menuTable.add(leftButton).pad(10);
-        menuTable.add(rightButton).pad(10);
+        menuTable.add(leftButton).padLeft(3).padRight(3).padBottom(2).padTop(4);
+        menuTable.add(rightButton).padLeft(3).padRight(3).padBottom(2).padTop(4);
     }
 
     private void SetupBackground(){
@@ -268,6 +286,8 @@ public class BasicMenu {
 
 
     private void FinalizeTable(){
+        menuTable.getColor().a = 0.9f; // Make it slightly transparent
+
         // Pack it so the texture shows up, not sure why but if you do not do this the background texture will not be displayed
         menuTable.pack();
 

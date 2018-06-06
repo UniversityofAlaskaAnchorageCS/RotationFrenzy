@@ -20,6 +20,8 @@ import com.uaa.rotationfrenzy.graph.BasicGraph;
 import com.uaa.rotationfrenzy.level.Level;
 import com.uaa.rotationfrenzy.screen.ui.BasicMenu;
 
+import sun.management.BaseOperatingSystemImpl;
+
 
 // This is the main game screen that runs, taking user input
 public class GameScreen implements Screen, GestureDetector.GestureListener, InputProcessor {
@@ -36,6 +38,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     private float angleEntered = 0.0f;
 
     private BasicMenu gameOverMenu;
+    private BasicMenu inputMenu;
 
     private String levelFilename;
 
@@ -89,9 +92,15 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
     // AngleType is a string to display either "Degrees" or "Radians"
     private void getAngleFromUser(String angleType){
+        Texture menuBackground = RotationFrenzy.assetManager.get("textures/simple_tile.png");
+        inputMenu = new BasicMenu(menuBackground, "Enter the Angle", new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2), angleType);
+        inputMenu.setLeftButtonText("Ok");
+        inputMenu.setRightButtonText("Exit to Menu");
+        inputMenu.BuildMenu();
+
         // Option 1, popup a textbox to request the degrees
-        MyTextInputListener listener = new MyTextInputListener();
-        Gdx.input.getTextInput(listener, "Enter Angle in " + angleType, "", angleType);
+        // MyTextInputListener listener = new MyTextInputListener();
+        // Gdx.input.getTextInput(listener, "Enter Angle in " + angleType, "", angleType);
         this.userPrompted = true;
     }
 
@@ -133,6 +142,43 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
                 game.setScreen(new MainMenuScreen(game));
             }
         }
+
+        if (inputMenu != null){
+            inputMenu.update(delta);
+            String whichButton = inputMenu.checkButtonPressed();
+            if (whichButton.equalsIgnoreCase("left")){
+                String text = inputMenu.getUserInput();
+
+                // Prevent empty string error (Exception in thread "LWJGL Application" java.lang.NumberFormatException: empty String)
+
+                System.out.println("Text entered:" + text);
+                try {
+                    angleEntered = Float.parseFloat(text);
+                    // TODO: Validate data range 0-360, and 0-N radians
+
+                    level.setUserAngle(angleEntered);
+
+                    // If the user did not guess the correct guess, and we have attempts left, continue
+                    if (level.areAttemptsLeft() && !level.isLevelComplete()){
+                        userPrompted = false;
+                    }
+                    inputMenu = null;
+                }
+                catch (NumberFormatException e) {
+                    System.err.println("ERROR: Invalid number! " + e.getMessage());
+
+                    // TODO: let user know somehow they entered invalid data
+                    // Maybe shake the messagebox and create an audible ding?
+
+                    // Reset so the messagebox will appear again
+                    inputMenu = null;
+                    userPrompted = false;
+                }
+            }else if (whichButton.equalsIgnoreCase("right")){
+                this.dispose();
+                game.setScreen(new MainMenuScreen(game));
+            }
+        }
     }
 
     private void draw(float delta){
@@ -165,6 +211,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         if (gameOverMenu != null){
             gameOverMenu.draw();
+        }
+
+        if (inputMenu != null){
+            inputMenu.draw();
         }
         //}
     }
