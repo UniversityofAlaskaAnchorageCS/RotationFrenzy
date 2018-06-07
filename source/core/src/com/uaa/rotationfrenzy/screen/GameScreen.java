@@ -10,10 +10,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.Json;
@@ -22,7 +20,7 @@ import com.uaa.rotationfrenzy.graph.BasicGraph;
 import com.uaa.rotationfrenzy.level.Level;
 import com.uaa.rotationfrenzy.screen.ui.BasicMenu;
 
-import java.text.ParseException;
+import sun.management.BaseOperatingSystemImpl;
 
 
 // This is the main game screen that runs, taking user input
@@ -40,6 +38,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
     private float angleEntered = 0.0f;
 
     private BasicMenu gameOverMenu;
+    private BasicMenu inputMenu;
 
     private String levelFilename;
 
@@ -75,8 +74,6 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
                 level.setUserAngle(angleEntered);
 
                 // If the user did not guess the correct guess, and we have attempts left, continue
-                System.out.println(level.areAttemptsLeft());
-                System.out.println(!level.isLevelComplete());
                 if (level.areAttemptsLeft() && !level.isLevelComplete()){
                     userPrompted = false;
                 }
@@ -95,10 +92,69 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
     // AngleType is a string to display either "Degrees" or "Radians"
     private void getAngleFromUser(String angleType){
+        Texture menuBackground = RotationFrenzy.assetManager.get("textures/simple_tile.png");
+        inputMenu = new BasicMenu(menuBackground, "Enter the Angle", new Vector2(Gdx.graphics.getWidth() * (3.0f/4.0f), Gdx.graphics.getHeight() * (3.0f/4.0f)), angleType);
+        inputMenu.setLeftButtonText("Ok");
+        inputMenu.setRightButtonText("Exit to Menu");
+        inputMenu.BuildMenu();
+
         // Option 1, popup a textbox to request the degrees
-        MyTextInputListener listener = new MyTextInputListener();
-        Gdx.input.getTextInput(listener, "Enter Angle in " + angleType, "", angleType);
+        // MyTextInputListener listener = new MyTextInputListener();
+        // Gdx.input.getTextInput(listener, "Enter Angle in " + angleType, "", angleType);
         this.userPrompted = true;
+    }
+
+    private void handleInputUpdate(float delta){
+        if (inputMenu != null){
+            inputMenu.update(delta);
+            String whichButton = inputMenu.checkButtonPressed();
+            if (whichButton.equalsIgnoreCase("left")){
+                String text = inputMenu.getUserInput();
+
+                // Prevent empty string error (Exception in thread "LWJGL Application" java.lang.NumberFormatException: empty String)
+
+                System.out.println("Text entered:" + text);
+                try {
+                    angleEntered = Float.parseFloat(text);
+                    // TODO: Validate data range 0-360, and 0-N radians
+
+                    level.setUserAngle(angleEntered);
+
+                    // If the user did not guess the correct guess, and we have attempts left, continue
+                    if (level.areAttemptsLeft() && !level.isLevelComplete()){
+                        userPrompted = false;
+                    }
+                    inputMenu = null;
+                }
+                catch (NumberFormatException e) {
+                    System.err.println("ERROR: Invalid number! " + e.getMessage());
+
+                    // TODO: let user know somehow they entered invalid data
+                    // Maybe shake the messagebox and create an audible ding?
+
+                    // Reset so the messagebox will appear again
+                    inputMenu = null;
+                    userPrompted = false;
+                }
+            }else if (whichButton.equalsIgnoreCase("right")){
+                this.dispose();
+                game.setScreen(new MainMenuScreen(game));
+            }
+        }
+    }
+
+    private void handleGameOver(float delta){
+        if (gameOverMenu != null){
+            gameOverMenu.update(delta);
+            String whichButton = gameOverMenu.checkButtonPressed();
+            if (whichButton.equalsIgnoreCase("left")){
+                this.dispose();
+                game.setScreen(new GameScreen(game, levelFilename));
+            }else if (whichButton.equalsIgnoreCase("right")){
+                this.dispose();
+                game.setScreen(new MainMenuScreen(game));
+            }
+        }
     }
 
 
@@ -128,17 +184,9 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
             getAngleFromUser(level.getAngleUnitType());
         }
 
-        if (gameOverMenu != null){
-            gameOverMenu.update(delta);
-            String whichButton = gameOverMenu.checkButtonPressed();
-            if (whichButton.equalsIgnoreCase("left")){
-                this.dispose();
-                game.setScreen(new GameScreen(game, levelFilename));
-            }else if (whichButton.equalsIgnoreCase("right")){
-                this.dispose();
-                game.setScreen(new MainMenuScreen(game));
-            }
-        }
+
+        handleGameOver(delta);
+        handleInputUpdate(delta);
     }
 
     private void draw(float delta){
@@ -147,9 +195,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         game.batch.setProjectionMatrix(camera.combined);
 
+        // TODO: Correctly handle paused state to update, but not allow wheel to move etc
         //if (!this.isPaused) {
             game.batch.begin();
-        game.font.setColor(Color.WHITE);
+            game.font.setColor(Color.WHITE);
             level.draw(game, delta);
             game.batch.end();
 
@@ -169,14 +218,16 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
                 buildGameOverMenu();
             }
 
-        if (gameOverMenu != null){
-            gameOverMenu.draw();
-        }
+            if (gameOverMenu != null)
+                gameOverMenu.draw();
+
+            if (inputMenu != null)
+                inputMenu.draw();
         //}
     }
 
     private void buildGameOverMenu(){
-        if (gameOverMenu == null && level.isLevelFailed()){
+        if (gameOverMenu == null) {
             Texture menuBackground = RotationFrenzy.assetManager.get("textures/simple_tile.png");
 
             ArrayMap<String, String> items = new ArrayMap<String, String>();
@@ -186,8 +237,18 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
             items.put("Times Successful", "0");
             items.put("Times Failed", "2");
 
-            gameOverMenu = new BasicMenu(items, menuBackground, "Game Over Screen");
-            gameOverMenu.setLeftButtonText("Retry");
+
+            if (level.isLevelFailed()){
+                gameOverMenu = new BasicMenu(items, menuBackground, "Level Failed.");
+                gameOverMenu.setLeftButtonText("Retry");
+            }
+            else {
+                // gameOverMenu.setLeftButtonText("Next Level");
+                gameOverMenu = new BasicMenu(items, menuBackground, "Level Complete!");
+                gameOverMenu.setShowLeftButton(false); // Only option on a win is exit
+                // TODO: Add in "continue" button functionality to next level
+            }
+
             gameOverMenu.setRightButtonText("Exit");
             gameOverMenu.BuildMenu();
         }
