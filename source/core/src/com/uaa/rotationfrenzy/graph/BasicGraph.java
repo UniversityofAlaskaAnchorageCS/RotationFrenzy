@@ -21,7 +21,7 @@ public class BasicGraph {
 
     String title;
 
-    static String type = "alpha";
+    static String type = "theta";
 
 
 
