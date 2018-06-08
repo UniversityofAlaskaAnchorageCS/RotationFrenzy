@@ -14,18 +14,22 @@ import com.uaa.rotationfrenzy.RotationFrenzy;
 public class BasicGraph {
 
     ShapeRenderer shapeRenderer;
-    Array<Vector2> points;
-    Vector2 penPosition;
+    Array<Vector2> points;  // list of 2 points
+    Vector2 penPosition; // x and y
     Rectangle rect;
+    float lastOmega;
 
     String title;
+
+    static String type = "alpha";
+
+
 
     public BasicGraph() {
         this(new Vector2(100, 100));
     }
-
     public BasicGraph(Vector2 position) {
-        this(position, "Fake graph title");
+        this(position, "Angle Graph (" + type + " vs time)");
     }
     public BasicGraph(Vector2 position, String graphTitle){
         shapeRenderer = new ShapeRenderer();
@@ -34,7 +38,7 @@ public class BasicGraph {
         this.title = graphTitle;
 
         int width = 200;
-        rect = new Rectangle(position.x-width, position.y, width, 200);
+        rect = new Rectangle(position.x-width, position.y - 100, width, 200);
     }
 
     public void addPoint(Vector2 point){
@@ -46,9 +50,15 @@ public class BasicGraph {
             Vector2 firstPoint = points.first();
 
             // As long as the X values are different (They were converted to INT), add the point
-            if (point.x != firstPoint.x)
+            if (point.x != firstPoint.x) {
+//                float adder = 0f;
+//                for(int i = 1; i > 3; i++) {
+//                    adder = adder + point.x;
+//                }
+//                point.x = adder/3;
+//                System.out.println("point.x = " + point.x);
                 points.add(point);
-
+            }
         }else{
             points.add(point);  // No points yet, add the first point
         }
@@ -72,10 +82,49 @@ public class BasicGraph {
         }
     }
 
-    public void update(float delta, float y){
-        this.scrollGraph(delta);
-        this.addPoint(new Vector2((int)delta, y));
-        this.pruneGraph();
+
+    // initial value of omega
+    int omega = 0;
+
+    public void update(float delta, float y, float deltaV){
+
+        this.scrollGraph(delta);  // moves all the points over so that the graph moves
+
+        // adds points to the array list
+        if (type.equalsIgnoreCase("omega")){
+            // equation to calculate omega from all values passed in
+            // angular velocity = change in angle (in radians) / change in time
+            int omega = (int)(deltaV / delta); // deltaV is the change in angle in radians, delta is the change in time
+            this.addPoint(new Vector2((int)delta, omega));
+            //lastOmega = omega;
+
+            System.out.println("omega = " + omega);
+
+        }else if (type.equalsIgnoreCase("alpha")){
+
+
+            // angular velocity = change in angle (in radians) / change in time
+            int omega = (int)(deltaV / delta);
+
+            // equation to calculate Alpha from all values passed in
+            // angular acceleration = change in angular velocity / change in time
+            int alpha = (int)((omega - lastOmega)/delta/1000);
+
+            this.addPoint(new Vector2((int)delta, alpha));
+
+            System.out.println("omega = " + omega);
+            System.out.println("alpha = " + alpha);
+            System.out.println("delta = " + delta);
+            System.out.println("y = " + y);
+            System.out.println("deltaV = " + deltaV);
+            System.out.println();
+
+            lastOmega = omega; // this is the omega from the last update
+        }else {
+            this.addPoint(new Vector2((int)delta, y));
+        }
+
+        this.pruneGraph();  // cuts off the points that go beyond the edge of the graph (removes from the array list)
     }
 
     public void draw(float delta, final RotationFrenzy game, Camera camera){
