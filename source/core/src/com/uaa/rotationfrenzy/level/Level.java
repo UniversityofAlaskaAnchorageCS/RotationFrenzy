@@ -261,8 +261,14 @@ public class Level {
 
     public float getWheelRotationDegrees(){
         float angle = this.wheel.getAxisRotationAngle();
-        if (angle < 0)
+        if (angle < 0)  // TODO: Why am I doing this!?
             angle *=-1;
+
+        return angle;
+    }
+
+    public float getWheelRotationRadians(){
+        float angle = this.wheel.getAxisRotationAngle() * MathUtils.degreesToRadians;
 
         return angle;
     }

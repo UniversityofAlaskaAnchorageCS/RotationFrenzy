@@ -73,7 +73,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
                 // TODO: Validate data range 0-360, and 0-N radians
                 System.out.println("Text entered:" + text);
 
-                oldWheelAngle = level.getWheelRotationDegrees();
+                oldWheelAngle = level.getWheelRotationRadians();
 
                 level.setUserAngle(angleEntered);
 
@@ -184,9 +184,10 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
 
         // Calculate deltaV
-        float deltaV = oldWheelAngle - level.getWheelRotationDegrees();
+        float deltaV = oldWheelAngle - level.getWheelRotationRadians();
+        level.getWheelRotationDegrees();
 
-        chart.update(delta, level.getWheelRotationDegrees(), deltaV);
+        chart.update(delta, level.getWheelRotationRadians(), deltaV);
       
         // If the level requires text input, and we have not yet prompted the user, prompt them
         if (level.hasTextualInput() && !userPrompted){
