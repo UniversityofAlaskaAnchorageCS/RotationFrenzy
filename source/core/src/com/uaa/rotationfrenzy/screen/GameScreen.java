@@ -42,6 +42,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
     private String levelFilename;
 
+    private float oldWheelAngle;
 
     public GameScreen(final RotationFrenzy inGame, String levelName){
         this.game = inGame;
@@ -71,7 +72,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
                 // TODO: Validate data range 0-360, and 0-N radians
                 System.out.println("Text entered:" + text);
+
+                oldWheelAngle = level.getWheelRotationDegrees();
+
                 level.setUserAngle(angleEntered);
+
 
                 // If the user did not guess the correct guess, and we have attempts left, continue
                 if (level.areAttemptsLeft() && !level.isLevelComplete()){
@@ -177,7 +182,11 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
             this.level.update(delta);
         }
 
-        chart.update(delta, level.getWheelRotationDegrees());
+
+        // Calculate deltaV
+        float deltaV = oldWheelAngle - level.getWheelRotationDegrees();
+
+        chart.update(delta, level.getWheelRotationDegrees(), deltaV);
       
         // If the level requires text input, and we have not yet prompted the user, prompt them
         if (level.hasTextualInput() && !userPrompted){
