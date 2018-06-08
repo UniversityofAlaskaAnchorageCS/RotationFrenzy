@@ -267,6 +267,10 @@ public class Level {
         return angle;
     }
 
+    public float getWheelRotationRadians(){
+        return this.getWheelRotationDegrees() * MathUtils.degreesToRadians;
+    }
+
     // This is where we MOVE or ROTATE all objects
     public void update(float delta){
         wheel.update(delta);
