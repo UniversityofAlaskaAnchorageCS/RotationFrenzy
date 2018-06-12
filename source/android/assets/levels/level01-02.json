@@ -23,5 +23,6 @@
   "eagleRotationSpeedType": "None",
   "eagleRotationSpeedMin": 0,
   "eagleRotationSpeedMax": 0,
-  "acornStartRotations": [ ]
+  "acornStartRotations": [ ],
+  "graphType": "omega"
 }

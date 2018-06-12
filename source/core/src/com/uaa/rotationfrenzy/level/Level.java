@@ -49,6 +49,7 @@ public class Level {
     private int attempts;                   // how many times they can be wrong on this level before they fail?
     private int timeLimit;                  // How many seconds until they fail
     private String angleUnitType;           // Degrees, Radians, Random (Pick one)
+    private String graphType;               // Graph of type "omega" for angular velocity; type "alpha" for angular acceleration
 
     // Den specific values loaded from level#.json
     private boolean denExists;              // If the den does not exist, the level doesn't have one
@@ -228,6 +229,7 @@ public class Level {
 
     // This will load the settings for the den from the level variables into the den object
     private void generateDen(){
+
         if (denExists){
             // Add the sprite to the den, shrinking the image by half it's size
             den.setSprite(new Spritz(denTexture,

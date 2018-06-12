@@ -10,5 +10,6 @@
   "attempts": 3,
   "timeLimit": 60,
   "angleUnitType": "Random",
-  "acornStartRotations": [190, 250]
+  "acornStartRotations": [190, 250],
+  "graphType": "alpha"
 }
