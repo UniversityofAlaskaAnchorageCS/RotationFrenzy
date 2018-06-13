@@ -366,7 +366,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         Vector3 screenPos = camera.unproject(touchPos);
 
-        //System.out.println("Touch Dragging it out! " + touchPos);
+        System.out.println("Touch Dragging it out! " + touchPos);
 
         if (this.level.isTouchInput() && !level.isLevelComplete()) {
             this.level.touchDragged(screenPos, pointer, touchPoint);

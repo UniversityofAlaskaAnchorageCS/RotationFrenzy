@@ -90,7 +90,7 @@ public class BasicGraph {
         type = graphType;
 
         if (type.equalsIgnoreCase("omega")) {
-            int omega = (int) (deltaV / delta);
+            int omega = (int) (deltaV / delta/ 150);
             this.addPoint(new Vector2((int) delta, omega));
 
 
@@ -100,7 +100,8 @@ public class BasicGraph {
         }
         else if (type.equalsIgnoreCase("alpha")){
             int omega = (int)(deltaV / delta);
-            int alpha = (int)((omega - lastOmega)/delta/1000);
+//            int alpha = (int)((omega - lastOmega)/delta/1000);
+            int alpha = (int)((omega)/delta/20000);
             this.addPoint(new Vector2((int)delta, alpha));
             lastOmega = omega;
 
