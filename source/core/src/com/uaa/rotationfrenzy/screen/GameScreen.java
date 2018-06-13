@@ -61,7 +61,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         setupInput();
 
         // This sets the x and y positions of the graph
-        chart = new BasicGraph(new Vector2(RotationFrenzy.SCREEN_WIDTH - 50, 150));
+        chart = new BasicGraph(new Vector2(RotationFrenzy.SCREEN_WIDTH - 50, 150), level.getGraphType());
     }
 
     // This goes with option 1 above, could be pulled out to it's own class

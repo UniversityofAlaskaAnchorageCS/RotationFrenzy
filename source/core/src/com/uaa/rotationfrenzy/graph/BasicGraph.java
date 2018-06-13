@@ -43,7 +43,7 @@ public class BasicGraph {
         shapeRenderer = new ShapeRenderer();
         points = new Array<Vector2>();
         penPosition = position;
-        this.title = graphTitle;
+        this.title = graphTitle + " vs. time";
         int width = 200;
         rect = new Rectangle(position.x - width, position.y - 100, width, 200);
     }
@@ -92,15 +92,34 @@ public class BasicGraph {
         if (type.equalsIgnoreCase("omega")) {
             int omega = (int) (deltaV / delta);
             this.addPoint(new Vector2((int) delta, omega));
+
+
+            System.out.println("Omega Graph: omega = " + omega);
+
+
         }
         else if (type.equalsIgnoreCase("alpha")){
             int omega = (int)(deltaV / delta);
             int alpha = (int)((omega - lastOmega)/delta/1000);
             this.addPoint(new Vector2((int)delta, alpha));
             lastOmega = omega;
+
+
+
+            System.out.println("Alpha Graph: alpha = " + alpha);
+
+
         }
         else {
             this.addPoint(new Vector2((int)delta, y));
+
+
+
+
+            System.out.println("Something Else: omega = " + omega + ", alpha = ???");
+
+
+
         }
 
         this.pruneGraph();
