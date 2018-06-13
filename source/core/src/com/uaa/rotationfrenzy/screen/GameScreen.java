@@ -60,6 +60,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
 
         setupInput();
 
+        // This sets the x and y positions of the graph
         chart = new BasicGraph(new Vector2(RotationFrenzy.SCREEN_WIDTH - 50, 150));
     }
 
@@ -186,7 +187,7 @@ public class GameScreen implements Screen, GestureDetector.GestureListener, Inpu
         // Calculate deltaV
         float deltaV = oldWheelAngle - level.getWheelRotationDegrees();
 
-        chart.update(delta, level.getWheelRotationDegrees(), deltaV);
+        chart.update(delta, level.getWheelRotationDegrees(), deltaV, level.getGraphType());
       
         // If the level requires text input, and we have not yet prompted the user, prompt them
         if (level.hasTextualInput() && !userPrompted){

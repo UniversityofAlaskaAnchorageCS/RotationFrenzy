@@ -27,7 +27,7 @@ public class BasicGraph {
 
     float lastOmega;
 
-    static String type = "alpha";
+    static String type = "omega";
 
 
     public BasicGraph() {
@@ -39,17 +39,13 @@ public class BasicGraph {
     }
 
     public BasicGraph(Vector2 position, String graphTitle) {
+
         shapeRenderer = new ShapeRenderer();
         points = new Array<Vector2>();
         penPosition = position;
         this.title = graphTitle;
         int width = 200;
         rect = new Rectangle(position.x - width, position.y - 100, width, 200);
-    }
-
-
-    public void setGraphType(String type) {
-        if(graphType)
     }
 
 
@@ -88,8 +84,10 @@ public class BasicGraph {
 
     int omega = 0;
 
-    public void update(float delta, float y, float deltaV) {
+    public void update(float delta, float y, float deltaV, String graphType) {
         this.scrollGraph(delta);
+
+        type = graphType;
 
         if (type.equalsIgnoreCase("omega")) {
             int omega = (int) (deltaV / delta);

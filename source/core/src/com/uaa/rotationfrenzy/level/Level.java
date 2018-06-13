@@ -399,6 +399,10 @@ public class Level {
         checkForCompletion();
     }
 
+    public String getGraphType() {
+        return graphType;
+    }
+
     public void touchDragged(Vector3 newScreenPos, int pointer, Vector3 touchPoint) {
         // Get the angle based on the touch position relative to the wheel
         float touchedAngle = getAngleFromScreenCoords(touchPoint, wheel.getPosition());
