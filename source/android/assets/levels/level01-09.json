@@ -1,0 +1,13 @@
+{
+  "chapterID": 1,
+  "levelID": 9,
+  "levelName": "Angular Acceleration",
+  "levelQuestion": [
+    "Alpha vs Time graphs",
+    "Play and get a feeling for alpha vs time"],
+  "type": "Touch",
+  "attempts": 3,
+  "timeLimit": 60,
+  "angleUnitType": "Random",
+  "acornStartRotations": [75, 135, 250]
+}
