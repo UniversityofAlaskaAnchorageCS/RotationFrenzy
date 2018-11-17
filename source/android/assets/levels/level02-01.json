@@ -1,0 +1,11 @@
+{
+  "chapterID": 2,
+  "levelID": 1,
+  "levelName": "The Lighthouse",
+  "levelQuestion": [
+    "Rotate the lighthouse beams at a contanct Omega"],
+  "type": "Touch",
+  "attempts": 3,
+  "timeLimit": 60,
+  "angleUnitType": "Random"
+}
