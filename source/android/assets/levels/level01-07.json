@@ -1,0 +1,12 @@
+{
+  "chapterID": 1,
+  "levelID": 7,
+  "levelName": "Match Theta Graph",
+  "levelQuestion": [
+    "A “theta vs. time” graph is given.",
+    "Follow the graph with the movement of the wheel"],
+  "type": "Touch",
+  "attempts": 3,
+  "timeLimit": 60,
+  "angleUnitType": "Degrees"
+}

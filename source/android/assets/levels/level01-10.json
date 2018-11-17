@@ -1,0 +1,11 @@
+{
+  "chapterID": 1,
+  "levelID": 10,
+  "levelName": "Match Omega Graph",
+  "levelQuestion": [
+    "Maintain a constant alpha and stay within the bounds!"],
+  "type": "Touch",
+  "attempts": 3,
+  "timeLimit": 60,
+  "angleUnitType": "Random"
+}

@@ -1,0 +1,21 @@
+{
+  "chapterID": 1,
+  "levelID": 5,
+  "levelName": "Hidden Eagles",
+  "levelQuestion": [
+    "Avoid the hidden eagles by rotating at the given rate.",
+    "To get a feel for the rotation, go back to Chapter 1 Level 4"],
+  "type": "Touch",
+  "attempts": 3,
+  "timeLimit": 60,
+  "angleUnitType": "Degrees",
+  "eagleStartPositions": [ ],
+  "eagleStartRotations": [
+    80, -30
+  ],
+  "eagleStartVisible": false,
+  "eagleMovementType": "Rotate",
+  "eagleRotationSpeedType": "PickBetween",
+  "eagleRotationSpeedMin": 0.1,
+  "eagleRotationSpeedMax": 1.5
+}

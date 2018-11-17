@@ -1,0 +1,16 @@
+{
+  "chapterID": 1,
+  "levelID": 3,
+  "levelName": "Hidden Den",
+  "levelQuestion": [
+    "Get to the den by moving the squirrel to the exact angle",
+    "You must release the position to check your answer."],
+  "type": "Touch",
+  "attempts": 3,
+  "timeLimit": 60,
+  "angleUnitType": "Degrees",
+  "denExists": true,
+  "denStartVisible": false,
+  "denStartRotationMin": 30,
+  "denStartRotationMax": 330
+}
