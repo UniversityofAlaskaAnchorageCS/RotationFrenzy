@@ -57,39 +57,45 @@ public class ChapterSelectScreen implements Screen {
         outerTable.row();
 
         // Loop over all files in the levels/ folder
-         FileHandle[] files = Gdx.files.internal("levels/").list();
-         for(FileHandle file: files) {
-             // Only work on the "level" files
-             if (file.nameWithoutExtension().contains("level")) {
+        int padding_left = 25;
+        int padding_right = 50;
+        int spacing = 10;
+        int row_width = padding_left;
+        FileHandle[] files = Gdx.files.internal("levels/").list();
+        for(FileHandle file: files) {
+            // Only work on the "level" files
+            if (file.nameWithoutExtension().contains("level")) {
 
-                 JsonValue json = new JsonReader().parse(file);
-                 String levelID = json.getString("levelID");
-                 String chapterID = json.getString("chapterID");
-                 String levelName = json.getString("levelName");
+                JsonValue json = new JsonReader().parse(file);
+                String levelID = json.getString("levelID");
+                String chapterID = json.getString("chapterID");
+                String levelName = json.getString("levelName");
 
-                 // Determine which icon to use for this panel
-                 buttonImage = pickPanelIcon(Integer.parseInt(levelID));
+                // Determine which icon to use for this panel
+                buttonImage = pickPanelIcon(Integer.parseInt(levelID));
 
-                 // Build the panel
-                 panelTable = buildPanel(levelName, buttonImage, Integer.parseInt(chapterID), Integer.parseInt(levelID), file.name());
+                // Build the panel
+                panelTable = buildPanel(levelName, buttonImage, Integer.parseInt(chapterID), Integer.parseInt(levelID), file.name());
 
-                 // Tell libgdx to figure out the size (width and height) of the object after adding the new panel
-                 outerTable.pack();
+                // Tell libgdx to figure out the size (width and height) of the object after adding the new panel
+                outerTable.pack();
 
-                 // Make sure if we would add it off the screen to the right, instead add a new row first
-                 if (outerTable.getWidth() + panelTable.getWidth() > RotationFrenzy.SCREEN_WIDTH - 50){
-                     outerTable.row();
-                 }
+                // Make sure if we would add it off the screen to the right, instead add a new row first
+                row_width += panelTable.getWidth() + (spacing * 2);
+                if (row_width > RotationFrenzy.SCREEN_WIDTH - padding_right){
+                    outerTable.row();
+                    row_width = padding_left;
+                }
 
-                 outerTable.add(panelTable).space(10);;  // Add the panel to the main table
-             }
+                outerTable.add(panelTable).space(spacing);  // Add the panel to the main table
+            }
          }
 
          // Tell libgdx to figure out the size (width and height) of the object after adding the new panel
          outerTable.pack();
 
          // Position the selction to part way in and part way down from the top left of the screen
-         outerTable.setPosition(50, RotationFrenzy.SCREEN_HEIGHT - ((panelTable.getHeight() / 2) + outerTable.getHeight()));
+         outerTable.setPosition(padding_left, RotationFrenzy.SCREEN_HEIGHT - ((panelTable.getHeight() / 2) + outerTable.getHeight()));
          stage.addActor(outerTable);
     }
 
