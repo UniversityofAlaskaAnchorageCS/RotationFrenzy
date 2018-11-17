@@ -72,7 +72,7 @@ public class ChapterSelectScreen implements Screen {
                 String levelName = json.getString("levelName");
 
                 // Determine which icon to use for this panel
-                buttonImage = pickPanelIcon(Integer.parseInt(levelID));
+                buttonImage = pickPanelIcon(Integer.parseInt(chapterID), Integer.parseInt(levelID));
 
                 // Build the panel
                 panelTable = buildPanel(levelName, buttonImage, Integer.parseInt(chapterID), Integer.parseInt(levelID), file.name());
@@ -99,44 +99,71 @@ public class ChapterSelectScreen implements Screen {
          stage.addActor(outerTable);
     }
 
-    private Texture pickPanelIcon(int levelId){
-        Texture buttonImage;
+    private Texture pickPanelIcon(int chapterId, int levelId){
+        Texture buttonImage = null;
 
         Texture denIcon = RotationFrenzy.assetManager.get("textures/icons/den.jpg");
         Texture eagleIcon = RotationFrenzy.assetManager.get("textures/icons/eagle.png");
         Texture acornIcon = RotationFrenzy.assetManager.get("textures/icons/acorn.png");
         Texture redCross = RotationFrenzy.assetManager.get("textures/icons/redX.png");
         Texture chartIcon = RotationFrenzy.assetManager.get("textures/icons/chart.png");
-        Texture lighthouseIcon = RotationFrenzy.assetManager.get("textures/squirrel.png");
+        Texture lighthouseIcon = RotationFrenzy.assetManager.get("textures/icons/lighthouse.png");
+        Texture boatIcon = RotationFrenzy.assetManager.get("textures/icons/boat.png");
         Texture walrusIcon = RotationFrenzy.assetManager.get("textures/squirrel.png");
 
-        switch (levelId){
-            case 1: buttonImage = denIcon;
-            break;
-            case 2: buttonImage = denIcon;
-                break;
-            case 3: buttonImage = denIcon;
-                break;
-            case 4: buttonImage = eagleIcon;
-                break;
-            case 5: buttonImage = eagleIcon;
-                break;
-            case 6: buttonImage = acornIcon;
-                break;
-            case 7: buttonImage = chartIcon;
-                break;
-            case 8: buttonImage = chartIcon;
-                break;
-            case 9: buttonImage = chartIcon;
-                break;
-            case 10: buttonImage = chartIcon;
-                break;
-            case 11: buttonImage = chartIcon;
-                break;
-            case 12: buttonImage = chartIcon;
-                break;
-            default: buttonImage = redCross;
-                break;
+        // TODO: Add a levelIcon or thumbnail property to the level JSON files, use that instead
+        // TODO: Of this giant IF/Switch statement
+        if (chapterId == 1) {
+            switch (levelId) {
+                case 1: buttonImage = denIcon;
+                    break;
+                case 2: buttonImage = denIcon;
+                    break;
+                case 3: buttonImage = denIcon;
+                    break;
+                case 4: buttonImage = eagleIcon;
+                    break;
+                case 5: buttonImage = eagleIcon;
+                    break;
+                case 6: buttonImage = acornIcon;
+                    break;
+                case 7: buttonImage = chartIcon;
+                    break;
+                case 8: buttonImage = chartIcon;
+                    break;
+                case 9: buttonImage = chartIcon;
+                    break;
+                case 10: buttonImage = chartIcon;
+                    break;
+                case 11: buttonImage = chartIcon;
+                    break;
+                case 12: buttonImage = chartIcon;
+                    break;
+                default: buttonImage = redCross;
+                    break;
+            }
+        }else if (chapterId == 2){
+            switch (levelId) {
+                case 1: buttonImage = lighthouseIcon;
+                    break;
+                case 2: buttonImage = boatIcon;
+                    break;
+                case 3: buttonImage = boatIcon;
+                    break;
+                case 4: buttonImage = lighthouseIcon;
+                    break;
+                default: buttonImage = redCross;
+                    break;
+            }
+        }else if (chapterId == 3){
+            switch (levelId) {
+                case 1: buttonImage = walrusIcon;
+                    break;
+                default: buttonImage = redCross;
+                    break;
+            }
+        } else {
+            buttonImage = redCross;
         }
 
         return buttonImage;
